@@ -1,0 +1,15 @@
+{{#if error}}
+<p>There was an error signing up: {{error}}.</p>
+{{/if}}
+<form action='/signup' method='post'>
+<table align='center'>
+<tr><th>First Name: </th><th><input type='text' name='firstname'></th></tr>
+<tr><th>Last Name: </th><th><input type='text' name='lastname'></th></tr>
+<tr><th>Username: </th><th><input type='text' name='username'></th></tr>
+<tr><th>Password: </th><th><input type='password' name='password'></th></tr>
+<tr><th>Password (confirmation): </th><th><input type='password' name='password_confirmation'></th></tr>
+<tr><th>email:</th><th><input type="email" name="email" /></th></tr>
+<tr><th>User Role: </th><th><select name="userrole"><option value="student">Student</option><option value="admin">Admin</option> </select></th></tr>
+
+<tr><th colspan=2><button type='submit'>Sign up</button></th></tr></table>
+</form>

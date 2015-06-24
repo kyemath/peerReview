@@ -1,0 +1,17 @@
+<html>
+<head>
+</head>
+<body>
+<div id='header'>
+{{#if user}}
+Logged in as: <b>{{user.firstname}} {{user.lastname}}</b>.
+<a href='/logout'>Logout</a>
+{{else}}
+<a href='/login'>Login</a> | <a href='/signup'>Sign up</a>
+{{/if}}
+</div>
+
+{{{body}}}
+
+</body>
+</html>

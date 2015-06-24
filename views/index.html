@@ -1,0 +1,34 @@
+<html ng-app>
+<head>
+<title>Problems Page</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class='container' >
+<h2 align='center'>List Of Problems</h2><br>
+		<table class='table'>
+		<thead>
+			<tr><th>sno</th><th>Statement</th>
+ 
+			<th>hint </th></tr>
+		</thead>
+		<tbody>
+				{{#each stmtdata}}
+			<tr >
+				<td>{{this.sno}}</td>
+				<td>{{this.statement}}</td>
+				<td>{{this.hint}}</td>
+			</tr>
+				{{/each}}
+		</tbody>
+		</table>
+	</div>
+</ul>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+	</body>
+</html>
+
