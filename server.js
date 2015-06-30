@@ -106,15 +106,84 @@ app.get('/enterdata', function(req,res){
 app.get('/drafts', function(req,res){
 var coll = mongo.collection('stmtdata');
   coll.find({}).toArray(function(err, stmtdata){
-    res.render('drafts', {stmtdata:stmtdata});
+  var comcoll=mongo.collection('dfansdata');
+  comcoll.find({}).toArray(function(err,drafts){
+  var resArray=[]; 
+  var prblmnum;
+  var userPrnoArray=[];
+  for(var i=0,x=0;i<drafts.length;i++)
+  {
+	if(drafts[i]["username"]==req.user.username)
+	{
+		prblmnum=parseInt(drafts[i]["pno"]);
+		userPrnoArray[x]=prblmnum;
+		x++;
+	}
+  }
+
+  for(var i=0,x=0;i<stmtdata.length;i++)
+  {
+	prblmnum=parseInt(stmtdata[i]["sno"]);
+	if(userPrnoArray.indexOf(prblmnum)==-1)
+	{
+		resArray[x]=stmtdata[i];
+		x++;
+	}
+  }
+	res.render('drafts', {stmtdata:resArray});
+	});
+    
 });
 });
 
 //A page to review the drafts
 app.get('/reviewdrafts', function(req,res){
 var coll = mongo.collection('dfansdata');
-  coll.find({}).toArray(function(err, drafts){
-    res.render('reviewdrafts', {drafts:drafts});
+  coll.find().toArray(function(err, drafts){
+  var resArray=[];
+  var prblmno,username;
+  var userPnoArray=[];
+  for(var i=0,x=0;i<drafts.length;i++)
+  {
+	
+	if(drafts[i]["username"]==req.user.username)
+	{
+		prblmno=drafts[i]["pno"];
+		userPnoArray[x]=prblmno;
+		x++;
+	}
+  }
+  for(var i=0,x=0;i<drafts.length;i++)
+  {
+	prblmno=drafts[i]["pno"];
+	if(drafts[i]["username"]!=req.user.username && userPnoArray.indexOf(prblmno)!=-1)
+	{
+		resArray[x]=drafts[i];
+		x++;
+	}
+  }
+  res.render('reviewdrafts', {drafts:resArray});
+});
+});
+
+//A page to grade solutions
+app.get('/gradefinal', function(req,res){
+var coll = mongo.collection('dfansdata');
+  coll.find({commentcount:3}).toArray(function(err, drafts){
+    res.render('gradefinal', {drafts:drafts});
+});
+});
+
+//comment on a draft
+app.get('/commentondraft', function(req,res){
+var coll = mongo.collection('dfansdata');
+var dno=parseInt(req.session.dvalue);
+  coll.findOne({dno:dno}, function(err, draft){
+  var comcoll=mongo.collection('commentdata');
+  var ddno=parseInt(draft.dno);
+  comcoll.find({dno : ddno}).toArray(function(err,comdata){
+	res.render('commentondraft', {draft:draft,comdata:comdata});
+	});
 });
 });
 
@@ -128,12 +197,6 @@ coll.findOne({sno: stmtno}, function(err, document) {
  
 });
 
-app.get('/reviewdrafts', function(req,res){
-  res.render('reviewdrafts');
-});
-app.get('/gradefinal', function(req,res){
-  res.render('gradefinal');
-});
 
 app.get('/userscreen', function(req,res){
 var coll = mongo.collection('stmtdata');
@@ -226,9 +289,19 @@ app.post('/inputdraft', function(req, res){
 	  req.session.value=req.body.selected;
       res.redirect('/inputdraft');  
 });
+app.post('/commentondraft', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
+  
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = username;
+	  req.session.dvalue=req.body.dselected;
+      res.redirect('/commentondraft');  
+});
 
 //function to save a draft submitted by the user
-function saveDraft(username, pno, solution, callback){
+function saveDraft(username, pno, statement, solution, callback){
   
   var coll = mongo.collection('dfansdata');
   
@@ -239,6 +312,7 @@ function saveDraft(username, pno, solution, callback){
 	  dno:count,
       username: username,
 	  pno: pno,
+	  statement:statement,
       draft: solution,
 	  finalans : "NA",
 	  fgcount : 0,
@@ -253,13 +327,16 @@ function saveDraft(username, pno, solution, callback){
         });
 	});     
   }
+  
+  
 app.post('/savedraft', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
   var username=req.user.username;
   var solution=req.body.solution;
+  var statement=req.body.statement;
   var pno=req.session.value;
-     saveDraft(username, pno, solution, function(err, user){
+     saveDraft(username, pno, statement, solution, function(err, user){
     if (err) {
       res.render('inputdraft', {error: err});
     } else { 
@@ -275,6 +352,58 @@ app.post('/savedraft', function(req, res){
 	  
 });
 
+//function to save a comment submitted by the user
+function saveComment(comment, dno, commenton, commentby, callback){
+  
+  var coll = mongo.collection('commentdata');
+  
+  
+		var commentObject = {
+	  comment:comment,
+      dno: dno,
+	  commenton: commenton,
+	  commentby:commentby,
+        
+    };
+    
+    
+        // insert drafts into database 
+        coll.insert(commentObject, function(err,user){
+          callback(err,user);
+        });   
+		var collection = mongo.collection('dfansdata');
+	collection.update({dno: parseInt(dno)},{$inc:{commentcount:1}}, function(err, object) {
+																					if (err){
+																								console.warn(err.message);  // returns error if no matching object found
+																							}else{
+																									
+											
+																									}
+  });
+  }
+app.post('/savecomment', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+  
+  var commentby=req.user.username;
+  var comment=req.body.comment;
+  var commenton=req.body.commenton;
+  var dno=req.body.dno;
+     saveComment(comment, dno, commenton, commentby, function(err, user){
+    if (err) {
+      res.render('commentondraft', {error: err});
+    } else { 
+
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = req.user.username;
+	  
+      res.redirect('/userscreen');  
+	  
+    }
+  });
+  
+	  
+});
 
 //Function to input problems
 function enterData(statement, hint, solution, callback){

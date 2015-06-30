@@ -14,9 +14,9 @@
 <h2 align='center'>Select a problem from the list to review</h2><br>
 		<table >
 		
-		    <form action='/inputdraft' method='post'>
+		    <form action='/commentondraft' method='post'>
 				{{#each drafts}}
-			<tr ><td><input type="radio" name="selected" value="{{this.sno}}" >{{this.draft}}</td></tr>
+			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : {{this.statement}}</td></tr>
 				{{/each}}
 			<tr><td colspan=2 align='center'><button type='submit'>submit</button></td></tr>
 			</form>

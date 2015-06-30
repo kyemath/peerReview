@@ -1,0 +1,38 @@
+<html ng-app>
+<head>
+<title>Input Draft Page</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+</head>
+<body>
+
+<div class='container' >
+<h2 align='center'>Review and Comment on this Draft</h2><br>
+		
+		<table >
+			<tr >
+			
+			
+			<form action='/savecomment' method='post'>
+				<td width="10%">Statement :</td><td align='left'>{{draft.statement}}</td></tr><tr>
+				<td width="10%"> Draft : </td><td align='left'>{{draft.draft}}</td></tr>
+				{{#each comdata}}
+				
+				<tr><td>commented by:{{comdata.commentby}}</td><td>&nbsp{{comdata.comment}}</td></tr>
+				{{/each}}
+				<tr><td width="10%">comment : </td><td><input type='textarea' name='comment'></td></tr>
+				<input type='hidden' name='dno' value='{{draft.dno}}'>
+				<input type='hidden' name='commenton' value='{{draft.username}}'>
+			<tr><td colspan=2 align='center'><button type='submit'>submit</button></td></tr>
+			</form>
+			
+				
+		</table>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+</body>
+</html>
+
