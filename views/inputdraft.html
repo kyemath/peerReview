@@ -29,6 +29,14 @@
 				{{/each}}
 				{{#if fans_exist}}
 				<tr><td colspan=2>Final answer:{{record.finalans}}</td></tr>
+				{{#if gradedata}}
+				{{#each gradedata}}
+				<tr><td colspan=2> feedback : {{this.feedback}} by ({{this.gradeby}}) Grade : {{this.grade}}</td></tr>
+				{{/each}}
+				{{/if}}
+				{{#if avg_exist}}
+				<tr><td colspan=2> Final grade is : {{avg}}</td></tr>
+				{{/if}}
 				{{else}}
 					{{#if final}}
 						<tr><td>Final Solution : </td><td align=left><input type='textarea' name='finalsolution'></td></tr>

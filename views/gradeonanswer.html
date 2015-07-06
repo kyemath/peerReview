@@ -1,6 +1,6 @@
 <html ng-app>
 <head>
-<title>Input comment Page</title>
+<title>grade an answer</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -16,12 +16,13 @@
 			<tr >
 
 
-			<form action='/savecomment' method='post'>
+			<form action='/savegrade' method='post'>
 				<td width="20%">Statement :</td><td align='left'>{{draft.statement}}</td></tr><tr>
-				<td width="20%"> Draft : </td><td align='left'>{{draft.draft}}</td></tr>a
-				<tr><td width="20%">comment : </td><td><input type='textarea' name='comment'></td></tr>
+				<td width="20%"> Answer : </td><td align='left'>{{draft.finalans}}</td></tr>
+				<tr><td>Grade:</td><td><input type="radio" name="grade" value=1 > 1<input type="radio" name="grade" value=1 > 1 <input type="radio" name="grade" value=2 > 2 <input type="radio" name="grade" value=3 > 3 <input type="radio" name="grade" value=4 > 4 <input type="radio" name="grade" value=5 > 5 </td></tr>
+				<tr><td width="20%">Feedback : </td><td><input type='textarea' name='feedback'></td></tr>
 				<input type='hidden' name='dno' value='{{draft.dno}}'>
-				<input type='hidden' name='commenton' value='{{draft.username}}'>
+				<input type='hidden' name='gradeon' value='{{draft.username}}'>
 			<tr><td colspan=2 align='center'><button type='submit'>submit</button></td></tr>
 			</form>
 

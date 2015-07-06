@@ -14,11 +14,16 @@
 <h2 align='center'>Select a problem from the list to grade</h2><br>
 		<table >
 
-		    <form action='/' method='post'>
+		    <form action='/gradeonanswer' method='post'>
+
+				{{#if drafts}}
 				{{#each drafts}}
 			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : {{this.statement}}</td></tr>
 				{{/each}}
 			<tr><td colspan=2 align='center'><button type='submit'>submit</button></td></tr>
+			{{else}}
+			<tr><td colspan=2> No problems Availale to grade</td></tr>
+			{{/if}}
 			</form>
 
 		</table>

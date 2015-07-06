@@ -161,10 +161,50 @@ var coll = mongo.collection('dfansdata');
 //A page to grade solutions
 app.get('/gradefinal', function(req,res){
 var coll = mongo.collection('dfansdata');
-  coll.find({commentcount:3}).toArray(function(err, drafts){
-    res.render('gradefinal', {drafts:drafts});
-});
-});
+  coll.find({$and:[{finalans:{$ne:'NA'}},{commentcount:3}]}).toArray(function(err, drafts){
+    var gradecoll=mongo.collection('gradedata');
+    gradecoll.find().toArray(function(err,gradedata){
+    var resArray=[];
+    var prblmno,username;
+    var userPnoArray=[];
+    for(var i=0,x=0;i<drafts.length;i++)
+    {
+
+  	if(drafts[i]["username"]==req.user.username)
+  	{
+  		prblmno=drafts[i]["pno"];
+  		userPnoArray[x]=prblmno;
+  		x++;
+  	}
+    }
+    var comment_done=0;
+    for(var i=0,x=0;i<drafts.length;i++)
+    {
+  	prblmno=drafts[i]["pno"];
+  	if(drafts[i]["username"]!=req.user.username && parseInt(drafts[i]["fgcount"])<3 && userPnoArray.indexOf(prblmno)!=-1)
+  	{
+  		for(var k=0,y=0;k<gradedata.length;k++)
+    		{
+
+    			if(gradedata[k]["gradeby"]==req.user.username && drafts[i]["dno"]==gradedata[k]["dno"])
+    			{
+    				comment_done=1;
+    			}
+    		}
+    		if(comment_done==0)
+    		{
+  			resArray[x]=drafts[i];
+  			x++;
+  		}
+  		comment_done=0;
+  	}
+    }
+
+    res.render('gradefinal', {drafts:resArray});
+    });
+  });
+  });
+
 
 //comment on a draft
 app.get('/commentondraft', function(req,res){
@@ -176,7 +216,16 @@ var ddno=parseInt(req.session.dvalue);
 
 });
 });
+//grade on an answer
+app.get('/gradeonanswer', function(req,res){
+var coll = mongo.collection('dfansdata');
+var ddno=parseInt(req.session.dvalue);
+  coll.findOne({dno:ddno}, function(err, draft){
 
+	res.render('gradeonanswer', {draft:draft});
+
+});
+});
 //To get the desired problem to provide the draft
 app.get('/inputdraft', function(req,res){
 var coll = mongo.collection('stmtdata');
@@ -191,7 +240,23 @@ coll.findOne({sno: stmtno}, function(err, document) {
       final=true;
       if(record.finalans!="NA")
         fans_exist=true;
-  res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist});
+        var grade_coll=mongo.collection("gradedata");
+        grade_coll.find({dno:""+record.dno,gradeon:req.user.username}).toArray(function(err,gradedata){
+          var avg=0;
+          var avg_exist=false;
+          if(record.fgcount==3)
+          {
+            for(var m=0;m<gradedata.length;m++)
+            {
+              avg+=gradedata[m]["grade"];
+            }
+            avg=avg/3;
+            avg_exist=true;
+          }
+
+          res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist,gradedata:gradedata,avg:avg,avg_exist:avg_exist});
+        });
+
 });
 });
 
@@ -301,7 +366,16 @@ app.post('/commentondraft', function(req, res){
 	  req.session.dvalue=req.body.dselected;
       res.redirect('/commentondraft');
 });
+app.post('/gradeonanswer', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
 
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = username;
+	  req.session.dvalue=req.body.dselected;
+      res.redirect('/gradeonanswer');
+});
 //function to save a draft submitted by the user
 function saveDraft(username, pno, statement, solution, finalsolution, callback){
 
@@ -406,6 +480,61 @@ app.post('/savecomment', function(req, res){
      saveComment(comment, dno, commenton, commentby, function(err, user){
     if (err) {
       res.render('commentondraft', {error: err});
+    } else {
+
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = req.user.username;
+
+      res.redirect('/userscreen');
+
+    }
+  });
+
+
+});
+//function to save a comment submitted by the user
+function saveGrade(feedback, dno, gradeon, gradeby, grade, callback){
+
+  var coll = mongo.collection('gradedata');
+
+
+		var gradeObject = {
+	  grade:parseInt(grade),
+    feedback:feedback,
+      dno: dno,
+	  gradeon: gradeon,
+	  gradeby:gradeby
+
+
+    };
+
+
+        // insert drafts into database
+        coll.insert(gradeObject, function(err,user){
+          callback(err,user);
+        });
+		var collection = mongo.collection('dfansdata');
+	collection.update({dno:parseInt(dno)},{$inc:{fgcount:1}}, function(err, object) {
+																					if (err){
+																								console.warn(err.message);  // returns error if no matching object found
+																							}else{
+
+
+																									}
+  });
+  }
+app.post('/savegrade', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+
+  var gradeby=req.user.username;
+  var feedback=req.body.feedback;
+  var gradeon=req.body.gradeon;
+  var dno=req.body.dno;
+  var grade=req.body.grade;
+     saveGrade(feedback, dno, gradeon, gradeby,grade, function(err, user){
+    if (err) {
+      res.render('gradeonanswer', {error: err});
     } else {
 
       // This way subsequent requests will know the user is logged in.
