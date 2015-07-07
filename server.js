@@ -96,7 +96,9 @@ app.get('/signup', function(req,res){
   res.render('signup');
 });
 
-
+app.get('/selectmodule', function(req, res){
+  res.render('selectmodule');
+}); 
 //To get page to input problem statements
 app.get('/enterdata', function(req,res){
   res.render('enterdata');
@@ -105,7 +107,7 @@ app.get('/enterdata', function(req,res){
 //To get drafts page
 app.get('/drafts', function(req,res){
 var coll = mongo.collection('stmtdata');
-  coll.find({}).toArray(function(err, stmtdata){
+  coll.find({modno:req.session.modno}).toArray(function(err, stmtdata){
 
 	res.render('drafts', {stmtdata:stmtdata});
 });
@@ -134,7 +136,7 @@ var coll = mongo.collection('dfansdata');
   for(var i=0,x=0;i<drafts.length;i++)
   {
 	prblmno=drafts[i]["pno"];
-	if(drafts[i]["username"]!=req.user.username && parseInt(drafts[i]["commentcount"])<3 && userPnoArray.indexOf(prblmno)!=-1)
+	if(drafts[i]["username"]!=req.user.username && parseInt(drafts[i]["commentcount"])<2 && userPnoArray.indexOf(prblmno)!=-1)
 	{
 		for(var k=0,y=0;k<comdata.length;k++)
   		{
@@ -161,7 +163,7 @@ var coll = mongo.collection('dfansdata');
 //A page to grade solutions
 app.get('/gradefinal', function(req,res){
 var coll = mongo.collection('dfansdata');
-  coll.find({$and:[{finalans:{$ne:'NA'}},{commentcount:3}]}).toArray(function(err, drafts){
+  coll.find({$and:[{finalans:{$ne:'NA'}},{commentcount:2}]}).toArray(function(err, drafts){
     var gradecoll=mongo.collection('gradedata');
     gradecoll.find().toArray(function(err,gradedata){
     var resArray=[];
@@ -233,18 +235,27 @@ var stmtno=parseInt(req.session.value);
 coll.findOne({sno: stmtno}, function(err, document) {
   var draft_Collection=mongo.collection('dfansdata');
   draft_Collection.findOne({pno:req.session.value,username:req.user.username},function(err, record){
-    var comment_Collection=mongo.collection('commentdata');
-    comment_Collection.find({dno:""+record.dno}).toArray(function(err, comments){
+  var dnum=null;
+  var finalanswer=null;
+  var fg_count=null;
+  if(record!=null)
+  {
+		dnum=record.dno;
+		finalanswer=record.finalans;
+		fg_count=record.fgcount;
+  }
+     var comment_Collection=mongo.collection('commentdata');
+    comment_Collection.find({dno:""+dnum}).toArray(function(err, comments){
       var fans_exist=false,final=false;
-      if(comments.length==3)
+      if(comments.length==2)
       final=true;
-      if(record.finalans!="NA")
+      if(finalanswer!="NA")
         fans_exist=true;
         var grade_coll=mongo.collection("gradedata");
-        grade_coll.find({dno:""+record.dno,gradeon:req.user.username}).toArray(function(err,gradedata){
+        grade_coll.find({dno:""+dnum,gradeon:req.user.username}).toArray(function(err,gradedata){
           var avg=0;
           var avg_exist=false;
-          if(record.fgcount==3)
+          if(fg_count==3)
           {
             for(var m=0;m<gradedata.length;m++)
             {
@@ -357,6 +368,17 @@ app.post('/inputdraft', function(req, res){
       req.session.username = username;
 	  req.session.value=req.body.selected;
       res.redirect('/inputdraft');
+});
+
+app.post('/drafts', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
+
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = username;
+	  req.session.modno=req.body.moduleno;
+      res.redirect('/drafts');
 });
 app.post('/commentondraft', function(req, res){
   // The 3 variables below all come from the form
@@ -551,7 +573,7 @@ app.post('/savegrade', function(req, res){
 });
 
 //Function to input problems
-function enterData(statement, hint, solution, callback){
+function enterData(modno,statement, hint, solution, callback){
   var coll = mongo.collection('stmtdata');
 
   coll.count(function(err, count) {
@@ -559,6 +581,7 @@ function enterData(statement, hint, solution, callback){
 		++count;
 		var stmtObject = {
 	  sno:count,
+	  modno:modno,
       statement: statement,
 	  hint: hint,
       solution: solution
@@ -579,9 +602,10 @@ app.post('/enterdata', function(req, res){
   var statement = req.body.statement;
   var hint = req.body.hint;
   var solution = req.body.solution;
+  var modno=req.body.moduleno;
 
 
-  enterData(statement, hint, solution, function(err, user){
+  enterData(modno, statement, hint, solution, function(err, user){
     if (err) {
       res.render('enterdata', {error: err});
     } else {
@@ -589,7 +613,7 @@ app.post('/enterdata', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = user.username;
 
-      res.redirect('/');
+      res.redirect('/enterdata');
     }
   });
 });
