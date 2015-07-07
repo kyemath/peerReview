@@ -264,7 +264,7 @@ coll.findOne({sno: stmtno}, function(err, document) {
 
 });
 
-
+//To get default user screen
 app.get('/userscreen', function(req,res){
 var coll = mongo.collection('stmtdata');
   coll.find({}).toArray(function(err, stmtdata){
@@ -272,11 +272,13 @@ var coll = mongo.collection('stmtdata');
 });
 });
 
+//function to create password salt
 function createSalt(){
   var crypto = require('crypto');
   return crypto.randomBytes(32).toString('hex');
 }
 
+//Function to create password hash
 function createHash(string){
   var crypto = require('crypto');
   return crypto.createHash('sha256').update(string).digest('hex');
