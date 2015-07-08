@@ -662,7 +662,7 @@ app.post('/login', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = user.username;
 
-      res.redirect('/userscreen');
+      res.render('userscreen',{layout: false});
     } else {
       res.render('login', {badCredentials: true});
     }

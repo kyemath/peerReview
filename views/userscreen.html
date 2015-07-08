@@ -1,6 +1,18 @@
 <html ng-app>
 <head>
 <title>User Page</title>
+<style>
+ .menu {
+    float:left;
+    width:10%;
+    height:100%;
+  }
+  .mainContent {
+    float:left;
+    width:89%;
+    height:100%;
+  }
+</style>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
@@ -8,16 +20,21 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 <body>
-
-<table align="Center">
-    <tr>
-		<td width="20%">  <a href="/selectmodule">    <div style="height:100%;width:100%">      Your Drafts    </div>  </a></td>
-		 <td width="20%">  <a href="/reviewdrafts">    <div style="height:100%;width:100%">      Review Drafts    </div>  </a></td>
-		 <td width="20%">  <a href="/gradefinal">    <div style="height:100%;width:100%">      Grade Final    </div>  </a></td>
-        
-    </tr>
-</table>
+<div class="menu"><br><br><br><br><br>
+<table align=center>
+<tr><th>
+  <a href="/selectmodule" target="iframe_a">module 1</a></th></tr><tr><th>
+  <a href="/selectmodule" target="iframe_a">module 2</a></th></tr><tr><th>
+  <a href="/selectmodule" target="iframe_a">module 3</a></th></tr><tr><th>
+  <a href="/selectmodule" target="iframe_a">module 4</a></th></tr><tr><th>
+    <hr>
+  <a href="/reviewdrafts" target="iframe_a">Grade Drafts</a></th></tr><tr><th>
+  <a href="/gradefinal" target="iframe_a">Grade Solution</a></th></tr></table>
+</div>
+<iframe src="/" name="iframe_a" class="mainContent" frameborder="0">
+<p>Your browser does not support iframes.</p>
+</iframe>
+</body>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
 	</body>
 </html>
-
