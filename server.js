@@ -98,7 +98,9 @@ app.get('/signup', function(req,res){
 
 app.get('/selectmodule', function(req, res){
   res.render('selectmodule');
-}); 
+});
+
+
 //To get page to input problem statements
 app.get('/enterdata', function(req,res){
   res.render('enterdata');
@@ -249,7 +251,7 @@ coll.findOne({sno: stmtno}, function(err, document) {
       var fans_exist=false,final=false;
       if(comments.length==2)
       final=true;
-      if(finalanswer!="NA")
+      if(finalanswer!="NA" && finalanswer!=null)
         fans_exist=true;
         var grade_coll=mongo.collection("gradedata");
         grade_coll.find({dno:""+dnum,gradeon:req.user.username}).toArray(function(err,gradedata){

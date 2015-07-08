@@ -20,23 +20,19 @@
 
 				{{#if record}}
 				<tr><td width="10%"> draft : </td><td align='left'>{{record.draft}}</td></tr>
-				{{else}}
-				<tr><td width="10%">Solution : </td><td><input type='textarea' name='solution'></td></tr>
-				<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
-				{{/if}}
 				{{#each comments}}
 				<tr><td colspan=2> comment : {{this.comment}} by ({{this.commentby}})</td></tr>
 				{{/each}}
 				{{#if fans_exist}}
-				<tr><td colspan=2>Final answer:{{record.finalans}}</td></tr>
-				{{#if gradedata}}
-				{{#each gradedata}}
-				<tr><td colspan=2> feedback : {{this.feedback}} by ({{this.gradeby}}) Grade : {{this.grade}}</td></tr>
-				{{/each}}
-				{{/if}}
-				{{#if avg_exist}}
-				<tr><td colspan=2> Final grade is : {{avg}}</td></tr>
-				{{/if}}
+					<tr><td colspan=2>Final answer:{{record.finalans}}</td></tr>
+					{{#if gradedata}}
+						{{#each gradedata}}
+							<tr><td colspan=2> feedback : {{this.feedback}} by ({{this.gradeby}}) Grade : {{this.grade}}</td></tr>
+						{{/each}}
+						{{/if}}
+						{{#if avg_exist}}
+							<tr><td colspan=2> Final grade is : {{avg}}</td></tr>
+						{{/if}}
 				{{else}}
 					{{#if final}}
 						<tr><td>Final Solution : </td><td align=left><input type='textarea' name='finalsolution'></td></tr>
@@ -45,6 +41,11 @@
 					<tr><td colspan=2><p>Please wait as the review is still inprogress.</p></td></tr>
 					{{/if}}
 				{{/if}}
+				{{else}}
+				<tr><td width="10%">Solution : </td><td><input type='textarea' name='solution'></td></tr>
+				<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+				{{/if}}
+
 
 				<input type='hidden' name='statement' value='{{document.statement}}'>
 			</form>

@@ -9,21 +9,25 @@
 </head>
 <body>
 
-<h1>Review Drafts Page</h1>
 <div class='container' >
+	{{#if drafts}}
 <h2 align='center'>Select a problem from the list to review</h2><br>
 		<table >
-		
+
 		    <form action='/commentondraft' method='post'>
+
 				{{#each drafts}}
 			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : {{this.statement}}</td></tr>
 				{{/each}}
-			<tr><td colspan=2 align='center'><button type='submit'>submit</button></td></tr>
+			<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/userscreen"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+
 			</form>
-				
+
 		</table>
+		{{else}}
+		<h2 align='center'> Problems are not available for review</h2>
+		{{/if}}
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
 	</body>
 </html>
-
