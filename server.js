@@ -97,7 +97,7 @@ app.get('/signup', function(req,res){
 });
 
 app.get('/selectmodule', function(req, res){
-  res.render('selectmodule');
+  res.render('selectmodule',{layout:false});
 });
 
 
@@ -111,7 +111,7 @@ app.get('/drafts', function(req,res){
 var coll = mongo.collection('stmtdata');
   coll.find({modno:req.session.modno}).toArray(function(err, stmtdata){
 
-	res.render('drafts', {stmtdata:stmtdata});
+	res.render('drafts', {stmtdata:stmtdata,layout:false});
 });
 });
 
@@ -157,7 +157,7 @@ var coll = mongo.collection('dfansdata');
 	}
   }
 
-  res.render('reviewdrafts', {drafts:resArray});
+  res.render('reviewdrafts', {drafts:resArray,layout:false});
   });
 });
 });
@@ -204,7 +204,7 @@ var coll = mongo.collection('dfansdata');
   	}
     }
 
-    res.render('gradefinal', {drafts:resArray});
+    res.render('gradefinal', {drafts:resArray,layout:false});
     });
   });
   });
@@ -216,7 +216,7 @@ var coll = mongo.collection('dfansdata');
 var ddno=parseInt(req.session.dvalue);
   coll.findOne({dno:ddno}, function(err, draft){
 
-	res.render('commentondraft', {draft:draft});
+	res.render('commentondraft', {draft:draft,layout:false});
 
 });
 });
@@ -226,7 +226,7 @@ var coll = mongo.collection('dfansdata');
 var ddno=parseInt(req.session.dvalue);
   coll.findOne({dno:ddno}, function(err, draft){
 
-	res.render('gradeonanswer', {draft:draft});
+	res.render('gradeonanswer', {draft:draft,layout:false});
 
 });
 });
@@ -267,7 +267,7 @@ coll.findOne({sno: stmtno}, function(err, document) {
             avg_exist=true;
           }
 
-          res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist,gradedata:gradedata,avg:avg,avg_exist:avg_exist});
+          res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist,gradedata:gradedata,avg:avg,avg_exist:avg_exist,layout:false});
         });
 
 });
@@ -380,6 +380,7 @@ app.post('/drafts', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = username;
 	  req.session.modno=req.body.moduleno;
+    
       res.redirect('/drafts');
 });
 app.post('/commentondraft', function(req, res){
@@ -458,7 +459,7 @@ app.post('/savedraft', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = username;
 
-      res.redirect('/userscreen');
+      res.render('selectmodule',{layout:false});
 
     }
   });
@@ -511,7 +512,7 @@ app.post('/savecomment', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = req.user.username;
 
-      res.redirect('/userscreen');
+      res.render('reviewdrafts',{layout:false});
 
     }
   });
@@ -566,7 +567,7 @@ app.post('/savegrade', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = req.user.username;
 
-      res.redirect('/userscreen');
+      res.render('gradefinal',{layout:false});
 
     }
   });
@@ -651,19 +652,23 @@ app.post('/login', function(req, res){
   var password = req.body.password;
 
   authenticateUser(username, password, function(err, user){
-    if(user.userrole==='admin')
-	{
+    if(user)
+    {
+      if(user.userrole==='admin')
+	     {
 		// This way subsequent requests will know the user is logged in.
-      req.session.username = user.username;
+          req.session.username = user.username;
 
-      res.redirect('/enterdata');
-	}
-	else if (user) {
-      // This way subsequent requests will know the user is logged in.
-      req.session.username = user.username;
+            res.redirect('/enterdata');
+	         }
+	          else {
+              // This way subsequent requests will know the user is logged in.
+              req.session.username = user.username;
 
-      res.render('userscreen',{layout: false});
-    } else {
+              res.redirect('/userscreen');
+    }
+  }
+   else {
       res.render('login', {badCredentials: true});
     }
   });

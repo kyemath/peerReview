@@ -23,15 +23,31 @@
 <div class="menu"><br><br><br><br><br>
 <table align=center>
 <tr><th>
-  <a href="/selectmodule" target="iframe_a">module 1</a></th></tr><tr><th>
-  <a href="/selectmodule" target="iframe_a">module 2</a></th></tr><tr><th>
-  <a href="/selectmodule" target="iframe_a">module 3</a></th></tr><tr><th>
-  <a href="/selectmodule" target="iframe_a">module 4</a></th></tr><tr><th>
+  <form id="my_form1" action='/drafts' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='moduleno' value='m1' >
+<a href="javascript:{}" onclick="document.getElementById('my_form1').submit(); return false;">module 1</a>
+</form></th></tr><tr><th>
+  <form id="my_form2" action='/drafts' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='moduleno' value='m2'>
+<a href="javascript:{}" onclick="document.getElementById('my_form2').submit(); return false;">module 2</a>
+</form></th></tr><tr><th>
+  <form id="my_form3" action='/drafts' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='moduleno' value='m3'>
+<a href="javascript:{}" onclick="document.getElementById('my_form3').submit(); return false;">module 3</a>
+</form></th></tr><tr><th>
+  <form id="my_form4" action='/drafts' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='moduleno' value='m4'>
+<a href="javascript:{}" onclick="document.getElementById('my_form4').submit(); return false;">module 4</a>
+</form></th></tr><tr><th>
     <hr>
   <a href="/reviewdrafts" target="iframe_a">Grade Drafts</a></th></tr><tr><th>
   <a href="/gradefinal" target="iframe_a">Grade Solution</a></th></tr></table>
 </div>
-<iframe src="/" name="iframe_a" class="mainContent" frameborder="0">
+<iframe src="/selectmodule" name="iframe_a" class="mainContent" frameborder="0">
 <p>Your browser does not support iframes.</p>
 </iframe>
 </body>
