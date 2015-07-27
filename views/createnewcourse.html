@@ -1,0 +1,10 @@
+<center><a href="/createnewcourse">Create New Course</a> || <a href="/modifycourse">Modify Existing Course</a> || <a href="/courseemail">Course Mail</a></center>
+<center><h2> Create New Course</h2></center>
+<form action='/createcourse' method='post'>
+<table align='center'>
+<tr><th>Course Name: </th><th><input type='text' name='coursename'></th></tr>
+<tr><th>Course Number: </th><th><input type='text' name='coursenum'></th></tr>
+<tr><th>Upload a .csv file with List of students: </th><th><input type='file' name='path'></th></tr>
+
+<tr><th colspan=2><button type='submit'>upload</button><a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
+</form>

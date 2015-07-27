@@ -1,0 +1,36 @@
+<center><a href="/createnewcourse">Create New Course</a> || <a href="/modifycourse">Modify Existing Course</a> || <a href="/courseemail">Course Mail</a></center>
+<FORM action="/sendmail" method="post" enctype="text/plain">
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="4" WIDTH="90%">
+<TR>
+<TD><DIV align="right"><B>To:</B></DIV>
+</TD>
+<TD>
+<INPUT type="text" name="email" size="20">
+</TD>
+</TR>
+<TR>
+<TD width="30%"><DIV align="right">
+<B>Subject:</B>
+</DIV>
+</TD>
+<TD width="70%">
+<INPUT type="text" name="subject" size="20">
+</TD>
+</TR>
+<TR>
+<TD><DIV align="right">
+<B>Message:</B>
+</DIV>
+</TD>
+<TD><TEXTAREA name="message" cols="30" wrap="virtual" rows="4">
+</TEXTAREA>
+</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD>
+<INPUT type="submit" name="submit" value="Submit">
+<INPUT type="reset" name="reset" value="Reset">
+<INPUT type="button" name="cancel" value="Cancel">
+</TD></TR>
+</TABLE>
+</FORM>

@@ -1,6 +1,7 @@
 //Declaring raquired modules for node.js
 var express = require('express');
 var app = express();
+var fs=require('fs')
 var expressSession = require('express-session');
 var expressHbs = require('express3-handlebars');
 var mongoUrl = 'mongodb://localhost:27017/regdata';
@@ -8,6 +9,7 @@ var MongoStore = require('connect-mongo')(expressSession);
 var mongo = require('./lib/mongo');
 assert = require('assert');
 var methods = require('./lib/methods');
+var csvParser = require('csv-parse');
 
 var port = 3333; // port number which we are using for node server
 
@@ -48,6 +50,19 @@ app.get('/login', function(req, res){
   res.render('login');
 });
 
+app.get('/admin', function(req, res){
+  res.render('admin');
+});
+app.get('/createnewcourse', function(req, res){
+  res.render('createnewcourse');
+});
+app.get('/modifycourse', function(req, res){
+  res.render('modifycourse');
+});
+app.get('/courseemail', function(req, res){
+  res.render('courseemail');
+});
+
 //To get logout page
 app.get('/logout', function(req, res){
   delete req.session.username;
@@ -79,6 +94,9 @@ app.get('/selectmodule', function(req, res){
   res.render('selectmodule',{layout:false});
 });
 
+app.get('/createmodule', function(req, res){
+  res.render('createmodule');
+});
 
 //To get page to input problem statements
 app.get('/enterdata', function(req,res){
@@ -301,6 +319,33 @@ app.post('/inputdraft', function(req, res){
       res.redirect('/inputdraft');
 });
 
+app.post('/createcourse', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
+     var filePath=req.body.path;
+     fs.readFile(filePath, {
+                 encoding: 'utf-8'
+             }, function(err, csvData) {
+                 if (err) {
+                     console.log(err);
+                 }
+
+                 csvParser(csvData, {
+                     delimiter: ','
+                 }, function(err, data) {
+                     if (err) {
+                         console.log(err);
+                     } else {
+                         console.log(data);
+                     }
+                 });
+             });
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = username;
+      res.redirect('/createmodule');
+});
+
 app.post('/drafts', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -443,7 +488,7 @@ app.post('/login', function(req, res){
 		// This way subsequent requests will know the user is logged in.
           req.session.username = user.username;
 
-            res.redirect('/enterdata');
+            res.redirect('/admin');
 	         }
 	          else {
               // This way subsequent requests will know the user is logged in.
