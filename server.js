@@ -5,11 +5,11 @@ var fs=require('fs')
 var expressSession = require('express-session');
 var expressHbs = require('express3-handlebars');
 var mongoUrl = 'mongodb://localhost:27017/regdata';
-var MongoStore = require('connect-mongo')(expressSession);
 var mongo = require('./lib/mongo');
 assert = require('assert');
 var methods = require('./lib/methods');
 var csvParser = require('csv-parse');
+
 
 var port = 3333; // port number which we are using for node server
 
@@ -20,12 +20,7 @@ app.use( require('body-parser')() );
 // We need to use cookies for sessions, so use the cookie parser
 app.use( require('cookie-parser')() );
 
-app.use( expressSession({
-  secret: 'somesecretrandomstring',
-  store: new MongoStore({
-    url: mongoUrl
-  })
-}));
+app.use( expressSession({secret: 'somesecretrandomstring',}));
 
 // We must use this middleware _after_ the expressSession middleware,
 // because checkIfLoggedIn checks the `req.session.username` value,
