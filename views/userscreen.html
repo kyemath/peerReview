@@ -22,27 +22,16 @@
 <body>
 <div class="menu"><br><br><br><br><br>
 <table align=center>
+
+  {{#each modules}}
+  <tr><th>
+  <form id="my_form1"+{{this.modulename}} action='/drafts' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='modulename' value='{{this.modulename}}' >
+<a href="javascript:{}" onclick="document.getElementById('my_form1'+{{this.modulename}}).submit(); return false;">{{this.modulename}}</a>
+</form></th></tr>
+{{/each}}
 <tr><th>
-  <form id="my_form1" action='/drafts' target="iframe_a" method='post'>
-<!-- Your Form -->
-	<input type='hidden' name='moduleno' value='m1' >
-<a href="javascript:{}" onclick="document.getElementById('my_form1').submit(); return false;">module 1</a>
-</form></th></tr><tr><th>
-  <form id="my_form2" action='/drafts' target="iframe_a" method='post'>
-<!-- Your Form -->
-	<input type='hidden' name='moduleno' value='m2'>
-<a href="javascript:{}" onclick="document.getElementById('my_form2').submit(); return false;">module 2</a>
-</form></th></tr><tr><th>
-  <form id="my_form3" action='/drafts' target="iframe_a" method='post'>
-<!-- Your Form -->
-	<input type='hidden' name='moduleno' value='m3'>
-<a href="javascript:{}" onclick="document.getElementById('my_form3').submit(); return false;">module 3</a>
-</form></th></tr><tr><th>
-  <form id="my_form4" action='/drafts' target="iframe_a" method='post'>
-<!-- Your Form -->
-	<input type='hidden' name='moduleno' value='m4'>
-<a href="javascript:{}" onclick="document.getElementById('my_form4').submit(); return false;">module 4</a>
-</form></th></tr><tr><th>
     <hr>
   <a href="/reviewdrafts" target="iframe_a">Grade Drafts</a></th></tr><tr><th>
   <a href="/gradefinal" target="iframe_a">Grade Solution</a></th></tr></table>

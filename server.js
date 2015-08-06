@@ -40,6 +40,12 @@ app.get('/', function(req, res){
   })
 });
 
+app.get('/moduleproblems', function(req, res){
+  var coll = mongo.collection('problemschema');
+  coll.find({courseId:req.session.courseId,modulename:req.session.modulename}).toArray(function(err, stmtdata){
+    res.render('moduleproblems', {stmtdata:stmtdata});
+  })
+});
 //To get login page
 app.get('/login', function(req, res){
   res.render('login');
@@ -50,7 +56,9 @@ app.get('/pwdsuccess', function(req, res){
 app.get('/studsettings', function(req, res){
   res.render('studsettings');
 });
-
+app.get('/uploadproblemsrepeat', function(req, res){
+  res.render('uploadproblemsrepeat');
+});
 app.get('/admin', function(req, res){
   res.render('admin');
 });
@@ -60,8 +68,18 @@ app.get('/createnewcourse', function(req, res){
 app.get('/populatemodule', function(req, res){
   res.render('populatemodule');
 });
+
+app.get('/modpop', function(req, res){
+  req.session.modulename=req.query.modName;
+
+  res.render('populatemodule');
+});
 app.get('/modifycourse', function(req, res){
-  res.render('modifycourse');
+  var course_coll=mongo.collection("courseschema");
+  course_coll.find({createdby:req.session.username}).toArray(function(err,courseList){
+    res.render('modifycourse',{courses:courseList});
+  });
+
 });
 app.get('/courseemail', function(req, res){
   res.render('courseemail');
@@ -86,11 +104,11 @@ app.get('/secret', methods.requireUser, function(req, res){
 });
 
 
-app.get('/pwdreset',  function(req, res){
-  var user_name=req.param('username');
+app.post('/pwdreset',  function(req, res){
+  var user_name=req.body.username;
   var user_coll=mongo.collection("users");
   user_coll.findOne({username: user_name}, function(err, document) {
-  res.render('pwdreset',{question:document.secquest});
+  res.render('pwdreset',{question:document.secquest,username:user_name});
   });
 });
 //To get signup page
@@ -115,18 +133,17 @@ app.get('/createmodule', function(req, res){
 });
 app.get('/uploadcsv', function(req, res){
   res.render('uploadcsv');
-});app.get('/uploadprblms', function(req, res){
+});
+app.get('/uploadprblms', function(req, res){
   res.render('uploadprblms');
 });
-//To get page to input problem statements
-app.get('/enterdata', function(req,res){
-  res.render('enterdata');
-});
+
 
 //To get drafts page
-app.get('/drafts', function(req,res){
-var coll = mongo.collection('stmtdata');
-  coll.find({modno:req.session.modno}).toArray(function(err, stmtdata){
+app.post('/drafts', function(req,res){
+var coll = mongo.collection('problemschema');
+var modulename=req.body.modulename;
+  coll.find({modulename:modulename}).toArray(function(err, stmtdata){
 
 	res.render('drafts', {stmtdata:stmtdata,layout:false});
 });
@@ -296,9 +313,9 @@ coll.findOne({sno: stmtno}, function(err, document) {
 
 //To get default user screen
 app.get('/userscreen', function(req,res){
-var coll = mongo.collection('stmtdata');
-  coll.find({}).toArray(function(err, stmtdata){
-    res.render('userscreen', {stmtdata:stmtdata});
+var coll = mongo.collection('moduleschema');
+  coll.find({}).toArray(function(err, modules){
+    res.render('userscreen', {modules:modules});
 });
 });
 
@@ -341,6 +358,32 @@ app.post('/inputdraft', function(req, res){
 	  req.session.value=req.body.selected;
       res.redirect('/inputdraft');
 });
+app.post('/updatecourse', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
+     var courseId=req.body.selected;
+     req.session.courseId=courseId;
+     var mod_coll=mongo.collection("moduleschema");
+
+     mod_coll.find({courseId:courseId}).toArray(function(err,modList){
+       var course_coll=mongo.collection("courseschema");
+       course_coll.findOne({courseId:courseId},function(err,course){
+
+         // This way subsequent requests will know the user is logged in.
+
+         req.session.username = username;
+
+         res.render('updatecourse',{course:course,modules:modList});
+
+       });
+
+
+
+
+     });
+
+});
 
 app.post('/uploadcsv', function(req, res){
   // The 3 variables below all come from the form
@@ -348,7 +391,7 @@ app.post('/uploadcsv', function(req, res){
   var username=req.user.username;
   var filePath=req.body.csvfile;
   var newColl=mongo.collection("problemschema");
-console.log(filePath);
+
   fs.readFile(filePath, {
               encoding: 'utf-8'
           }, function(err, csvData) {
@@ -372,8 +415,8 @@ console.log(filePath);
                                 {
                                   var stmtObject = {
   	                                               sno:count,
-                                                  courseId:"testcourse12",
-  	                                              modulename:"testmodule",
+                                                  courseId:req.session.courseId,
+  	                                              modulename:req.session.modulename,
                                                   problem: data[i][0],
   	                                              hint: data[i][1],
                                                   solution: data[i][2]
@@ -382,7 +425,7 @@ console.log(filePath);
 
                                                   // create the new Problem
                                                     newColl.insert(stmtObject, function(err,user){
-                                                      console.log("import success....");
+
                                                     });
                                                     count++;
   	                              }
@@ -395,7 +438,7 @@ console.log(filePath);
 
    // This way subsequent requests will know the user is logged in.
    req.session.username = username;
-   res.redirect('/');
+   res.redirect('/moduleproblems');
 });
 
 app.post('/createmodule', function(req, res){
@@ -407,7 +450,7 @@ app.post('/createmodule', function(req, res){
      coll.insert({modulename:modulename,courseId:req.session.courseId,createdby:username}, function(err,user){ });
       // This way subsequent requests will know the user is logged in.
       req.session.username = username;
-
+      req.session.modulename = modulename;
       res.render('modulecreated',{modulename:modulename});
 });
 
@@ -434,17 +477,7 @@ if (err) {
 
 });
 
-app.post('/drafts', function(req, res){
-  // The 3 variables below all come from the form
-  // in views/drafts.html
-     var username=req.user.username;
 
-      // This way subsequent requests will know the user is logged in.
-      req.session.username = username;
-	  req.session.modno=req.body.moduleno;
-
-      res.redirect('/drafts');
-});
 app.post('/commentondraft', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -578,21 +611,22 @@ app.post('/savegrade', function(req, res){
 app.post('/enterdata', function(req, res){
   // The 3 variables below all come from the form
   // in views/signup.hbs
+  var username=req.user.username;
   var statement = req.body.statement;
   var hint = req.body.hint;
   var solution = req.body.solution;
-  var modno=req.body.moduleno;
 
 
-  methods.enterData(modno, statement, hint, solution, function(err, user){
+
+  methods.enterData(req.session.courseId,req.session.modulename, statement, hint, solution, function(err, user){
     if (err) {
       res.render('enterdata', {error: err});
     } else {
 
       // This way subsequent requests will know the user is logged in.
-      req.session.username = user.username;
+      req.session.username = username;
 
-      res.redirect('/');
+      res.redirect('/uploadproblemsrepeat');
     }
   });
 });

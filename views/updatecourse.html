@@ -1,0 +1,11 @@
+<center><h4>Course Selected : {{course.courseName}}</h4><br>
+  Course number : {{course.courseNum}}
+<br>Course id : {{course.courseId}}<br>
+
+
+Available modules in the course :<br>
+{{#each modules}}
+<a href="/modpop?modName={{this.modulename}}">{{this.modulename}}</a><br>
+{{/each}}
+<h3><a href='/createmodule'>Create Module</a>
+<h4><a href="/">Enroll students</a></h4></center>

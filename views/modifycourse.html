@@ -2,10 +2,11 @@
 <center><h2> Update a Course</h2></center>
 <form action='/updatecourse' method='post'>
 <table align='center'>
-<tr><th>Select course: </th><th><select>
-  <option value="volvo">Volvo</option>
-
+<tr><th>Select course: </th><th><select name="selected">
+  {{#each courses}}
+  <option value="{{this.courseId}}">{{this.courseId}}</option>
+{{/each}}
 </select></th></tr>
 
-<tr><th colspan=2><button type='submit'>submit</button><a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
+<tr><th colspan=2><button type='submit'>submit</button>&nbsp;<a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
 </form>
