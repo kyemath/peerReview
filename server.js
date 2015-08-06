@@ -4,7 +4,7 @@ var app = express();
 var fs=require('fs')
 var expressSession = require('express-session');
 var expressHbs = require('express3-handlebars');
-var mongoUrl = 'mongodb://localhost:27017/regdata';
+var mongoUrl = 'mongodb://localhost:27017/peerreview';
 var mongo = require('./lib/mongo');
 assert = require('assert');
 var methods = require('./lib/methods');
@@ -34,7 +34,7 @@ app.set('view engine', 'html');
 
 //To get home page
 app.get('/', function(req, res){
-  var coll = mongo.collection('stmtdata');
+  var coll = mongo.collection('problemschema');
   coll.find({}).toArray(function(err, stmtdata){
     res.render('index.html', {stmtdata:stmtdata});
   })
@@ -44,6 +44,12 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
   res.render('login');
 });
+app.get('/pwdsuccess', function(req, res){
+  res.render('pwdsuccess');
+});
+app.get('/studsettings', function(req, res){
+  res.render('studsettings');
+});
 
 app.get('/admin', function(req, res){
   res.render('admin');
@@ -51,13 +57,18 @@ app.get('/admin', function(req, res){
 app.get('/createnewcourse', function(req, res){
   res.render('createnewcourse');
 });
+app.get('/populatemodule', function(req, res){
+  res.render('populatemodule');
+});
 app.get('/modifycourse', function(req, res){
   res.render('modifycourse');
 });
 app.get('/courseemail', function(req, res){
   res.render('courseemail');
 });
-
+app.get('/enrollmanually', function(req, res){
+  res.render('enrollmanually');
+});
 //To get logout page
 app.get('/logout', function(req, res){
   delete req.session.username;
@@ -74,11 +85,21 @@ app.get('/secret', methods.requireUser, function(req, res){
   res.render('secret');
 });
 
+
+app.get('/pwdreset',  function(req, res){
+  var user_name=req.param('username');
+  var user_coll=mongo.collection("users");
+  user_coll.findOne({username: user_name}, function(err, document) {
+  res.render('pwdreset',{question:document.secquest});
+  });
+});
 //To get signup page
 app.get('/signup', function(req,res){
   res.render('signup');
 });
-
+app.get('/pwdresetform', function(req,res){
+  res.render('pwdresetform');
+});
 //To get login page
 app.get('/success', function(req, res){
   res.render('success',{layout:false});
@@ -92,7 +113,11 @@ app.get('/selectmodule', function(req, res){
 app.get('/createmodule', function(req, res){
   res.render('createmodule');
 });
-
+app.get('/uploadcsv', function(req, res){
+  res.render('uploadcsv');
+});app.get('/uploadprblms', function(req, res){
+  res.render('uploadprblms');
+});
 //To get page to input problem statements
 app.get('/enterdata', function(req,res){
   res.render('enterdata');
@@ -278,6 +303,7 @@ var coll = mongo.collection('stmtdata');
 });
 
 
+
 //To get the data from signup form
 app.post('/signup', function(req, res){
   // The variables below all come from the form in views/signup.html
@@ -287,9 +313,11 @@ app.post('/signup', function(req, res){
   var password = req.body.password;
   var password_confirmation = req.body.password_confirmation;
   var email = req.body.email;
+  var sec_Quest=req.body.squest;
+  var sec_Answer=req.body.answer;
    var userrole = req.body.userrole;
 
-  methods.createUser(firstname, lastname,username, password, password_confirmation, email, userrole, function(err, user){
+  methods.createUser(firstname, lastname,username, password, password_confirmation, email, sec_Quest, sec_Answer, userrole, function(err, user){
     if (err) {
       res.render('signup', {error: err});
     } else {
@@ -314,31 +342,96 @@ app.post('/inputdraft', function(req, res){
       res.redirect('/inputdraft');
 });
 
+app.post('/uploadcsv', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+  var username=req.user.username;
+  var filePath=req.body.csvfile;
+  var newColl=mongo.collection("problemschema");
+console.log(filePath);
+  fs.readFile(filePath, {
+              encoding: 'utf-8'
+          }, function(err, csvData) {
+              if (err) {
+                  console.log(err);
+              }
+
+              csvParser(csvData, {
+                  delimiter: ','
+              }, function(err, data) {
+                  if (err) {
+                      console.log(err);
+                  } else {
+
+
+
+                        newColl.count(function(err, count) {
+                            assert.equal(null, err);
+  		                          ++count;
+                                for(var i=0;i<data.length;i++)
+                                {
+                                  var stmtObject = {
+  	                                               sno:count,
+                                                  courseId:"testcourse12",
+  	                                              modulename:"testmodule",
+                                                  problem: data[i][0],
+  	                                              hint: data[i][1],
+                                                  solution: data[i][2]
+                                                };
+
+
+                                                  // create the new Problem
+                                                    newColl.insert(stmtObject, function(err,user){
+                                                      console.log("import success....");
+                                                    });
+                                                    count++;
+  	                              }
+
+                                });
+
+              }
+          });
+        });
+
+   // This way subsequent requests will know the user is logged in.
+   req.session.username = username;
+   res.redirect('/');
+});
+
+app.post('/createmodule', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+     var username=req.user.username;
+     var modulename=req.body.modulename;
+     var coll=mongo.collection("moduleschema");
+     coll.insert({modulename:modulename,courseId:req.session.courseId,createdby:username}, function(err,user){ });
+      // This way subsequent requests will know the user is logged in.
+      req.session.username = username;
+
+      res.render('modulecreated',{modulename:modulename});
+});
+
 app.post('/createcourse', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
      var username=req.user.username;
-     var filePath=req.body.path;
-     fs.readFile(filePath, {
-                 encoding: 'utf-8'
-             }, function(err, csvData) {
-                 if (err) {
-                     console.log(err);
-                 }
+     var courseName=req.body.coursename;
+     var courseNum=req.body.coursenum;
+     var courseId=req.body.courseid;
+methods.createCourse(courseName,courseNum,courseId,username, function(err, user){
+if (err) {
+ res.render('createnewcourse', {error: err});
+} else {
 
-                 csvParser(csvData, {
-                     delimiter: ','
-                 }, function(err, data) {
-                     if (err) {
-                         console.log(err);
-                     } else {
-                         console.log(data);
-                     }
-                 });
-             });
-      // This way subsequent requests will know the user is logged in.
-      req.session.username = username;
-      res.redirect('/createmodule');
+ // This way subsequent requests will know the user is logged in.
+ req.session.username = username;
+ req.session.courseId=courseId;
+ res.render('coursecreated',{courseName:courseName,courseNum:courseNum,courseId:courseId});
+
+}
+});
+
+
 });
 
 app.post('/drafts', function(req, res){
@@ -362,6 +455,39 @@ app.post('/commentondraft', function(req, res){
 	  req.session.dvalue=req.body.dselected;
       res.redirect('/commentondraft');
 });
+app.post('/resetpwd', function(req, res){
+
+var user_name=req.body.username;
+var answer=req.body.answer;
+var password=req.body.newpassword;
+var question=req.body.question;
+
+var coll=mongo.collection("users");
+
+coll.find({username:user_name,answer:answer}).toArray(function(err,user1){
+  if(user1.length>0)
+  {
+  methods.changepassword(user_name, answer, password, function(err, user){
+ if (err) {
+   res.render('pwdreset', {error: true,question:question});
+ } else {
+
+   res.render('pwdsuccess');
+
+ }
+});
+}
+else {
+  {
+    res.render('pwdreset', {error: true,question:question});
+  }
+}
+});
+
+
+});
+
+
 app.post('/gradeonanswer', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -421,6 +547,8 @@ app.post('/savecomment', function(req, res){
 
 });
 
+
+
 app.post('/savegrade', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -464,7 +592,7 @@ app.post('/enterdata', function(req, res){
       // This way subsequent requests will know the user is logged in.
       req.session.username = user.username;
 
-      res.redirect('/enterdata');
+      res.redirect('/');
     }
   });
 });

@@ -1,0 +1,13 @@
+{{#if error}}
+<center><p>Wrong answer.Please try again</p><center>
+{{/if}}
+<form action='/resetpwd' method='post'>
+<table align='center'>
+<tr><th>Security Question : </th><th>{{question}}</th></tr>
+<tr><th>Answer: </th><th><input type='text' name='answer'></th></tr>
+<tr><th>New Password : </th><th><input type='password' name='newpassword'></th></tr>
+<input type='hidden' name='username' value='{{userdata.username}}'>
+<input type='hidden' name='question' value='{{question}}'>
+<tr><th colspan=2><button type='submit'>Change Password</button> &nbsp;<a href="/"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
+
+</form>
