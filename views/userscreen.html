@@ -25,10 +25,10 @@
 
   {{#each modules}}
   <tr><th>
-  <form id="my_form1"+{{this.modulename}} action='/drafts' target="iframe_a" method='post'>
+  <form id="{{this.modulename}}" action='/drafts' target="iframe_a" method='post'>
 <!-- Your Form -->
 	<input type='hidden' name='modulename' value='{{this.modulename}}' >
-<a href="javascript:{}" onclick="document.getElementById('my_form1'+{{this.modulename}}).submit(); return false;">{{this.modulename}}</a>
+<a href="javascript:{}" onclick="document.getElementById('{{this.modulename}}').submit(); return false;">{{this.modulename}}</a>
 </form></th></tr>
 {{/each}}
 <tr><th>

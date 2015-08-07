@@ -84,6 +84,15 @@ app.get('/modifycourse', function(req, res){
 app.get('/courseemail', function(req, res){
   res.render('courseemail');
 });
+app.get('/enrollstudents', function(req, res){
+  res.render('enrollstudents');
+});
+app.get('/uploadstudents', function(req, res){
+  res.render('uploadstudents');
+});
+app.get('/uploadstudentcsv', function(req, res){
+  res.render('uploadstudentcsv');
+});
 app.get('/enrollmanually', function(req, res){
   res.render('enrollmanually');
 });
@@ -265,10 +274,11 @@ var ddno=parseInt(req.session.dvalue);
 });
 });
 //To get the desired problem to provide the draft
-app.get('/inputdraft', function(req,res){
-var coll = mongo.collection('stmtdata');
-var stmtno=parseInt(req.session.value);
+app.post('/inputdraft', function(req,res){
+var coll = mongo.collection('problemschema');
+var stmtno=parseInt(req.body.selected);
 coll.findOne({sno: stmtno}, function(err, document) {
+
   var draft_Collection=mongo.collection('dfansdata');
   draft_Collection.findOne({pno:req.session.value,username:req.user.username},function(err, record){
   var dnum=null;
@@ -348,7 +358,7 @@ app.post('/signup', function(req, res){
 });
 
 //to get data from inputdraft form
-app.post('/inputdraft', function(req, res){
+/*app.post('/inputdraft', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
      var username=req.user.username;
@@ -357,7 +367,7 @@ app.post('/inputdraft', function(req, res){
       req.session.username = username;
 	  req.session.value=req.body.selected;
       res.redirect('/inputdraft');
-});
+});*/
 app.post('/updatecourse', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
