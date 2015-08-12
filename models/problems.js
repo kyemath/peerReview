@@ -7,7 +7,7 @@ var prblmsSchema = new Schema({
   sno: { type: Number, required: true, unique: true },
   mno: { type: String, required: true },
   courseno: { type: String, required: true },
-  statement:{ type: String, required: true },
+  problem:{ type: String, required: true },
   hint: String,
   solution: String,
 

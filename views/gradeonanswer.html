@@ -17,9 +17,9 @@
 
 
 			<form action='/savegrade' method='post'>
-				<td width="20%">Statement :</td><td align='left'>{{draft.statement}}</td></tr><tr>
+				<td width="20%">Problem :</td><td align='left'>{{draft.problem}}</td></tr><tr>
 				<td width="20%"> Answer : </td><td align='left'>{{draft.finalans}}</td></tr>
-				<tr><td>Grade:</td><td><input type="radio" name="grade" value=1 > 1<input type="radio" name="grade" value=1 > 1 <input type="radio" name="grade" value=2 > 2 <input type="radio" name="grade" value=3 > 3 <input type="radio" name="grade" value=4 > 4 <input type="radio" name="grade" value=5 > 5 </td></tr>
+				<tr><td>Grade:</td><td><input type="radio" name="grade" value=1 > 1 <input type="radio" name="grade" value=2 > 2 <input type="radio" name="grade" value=3 > 3 <input type="radio" name="grade" value=4 > 4 <input type="radio" name="grade" value=5 > 5 </td></tr>
 				<tr><td width="20%">Feedback : </td><td><input type='textarea' name='feedback'></td></tr>
 				<input type='hidden' name='dno' value='{{draft.dno}}'>
 				<input type='hidden' name='gradeon' value='{{draft.username}}'>

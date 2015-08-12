@@ -15,7 +15,7 @@
 		<table >
 			<tr >
 			<form action='/savedraft' method='post'>
-				<td width="10%">Statement :</td><td align='left'>{{document.problem}}</td></tr><tr>
+				<td width="10%">Problem :</td><td align='left'>{{document.problem}}</td></tr><tr>
 				<td width="10%"> hint : </td><td align='left'>{{document.hint}}</td></tr>
 
 				{{#if record}}
@@ -47,7 +47,8 @@
 				{{/if}}
 
 
-				<input type='hidden' name='statement' value='{{document.statement}}'>
+				<input type='hidden' name='problem' value='{{document.problem}}'>
+				<input type='hidden' name='sno' value='{{document.sno}}'>
 			</form>
 
 		</table>

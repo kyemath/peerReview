@@ -150,6 +150,15 @@ app.get('/uploadprblms', function(req, res){
   res.render('uploadprblms');
 });
 
+app.get('/usercourses', function(req, res){
+  var coll = mongo.collection('enrollmentschema');
+
+    coll.find({username:req.session.username}).toArray(function(err, courses){
+
+  	res.render('usercourses', {courses:courses});
+  });
+});
+
 
 //To get drafts page
 app.post('/drafts', function(req,res){
@@ -160,6 +169,7 @@ var modulename=req.body.modulename;
 	res.render('drafts', {stmtdata:stmtdata,layout:false});
 });
 });
+
 
 //A page to review the drafts
 app.get('/reviewdrafts', function(req,res){
@@ -283,7 +293,7 @@ var stmtno=parseInt(req.body.selected);
 coll.findOne({sno: stmtno}, function(err, document) {
 
   var draft_Collection=mongo.collection('dfansdata');
-  draft_Collection.findOne({pno:req.session.value,username:req.user.username},function(err, record){
+  draft_Collection.findOne({pno:""+stmtno,username:req.user.username},function(err, record){
   var dnum=null;
   var finalanswer=null;
   var fg_count=null;
@@ -326,8 +336,9 @@ coll.findOne({sno: stmtno}, function(err, document) {
 
 //To get default user screen
 app.get('/userscreen', function(req,res){
+  req.session.courseId=req.param("courseId");
 var coll = mongo.collection('moduleschema');
-  coll.find({}).toArray(function(err, modules){
+  coll.find({courseId:req.session.courseId}).toArray(function(err, modules){
     res.render('userscreen', {modules:modules});
 });
 });
@@ -588,10 +599,10 @@ app.post('/savedraft', function(req, res){
   // in views/drafts.html
   var username=req.user.username;
   var solution=req.body.solution;
-  var statement=req.body.statement;
-  var pno=req.session.value;
+  var problem=req.body.problem;
+  var pno=req.body.sno;
   var finalsolution=req.body.finalsolution;
-     methods.saveDraft(username, pno, statement, solution, finalsolution, function(err, user){
+     methods.saveDraft(username, pno, problem, solution, finalsolution, function(err, user){
     if (err) {
       res.render('inputdraft', {error: err});
     } else {
@@ -663,13 +674,13 @@ app.post('/enterdata', function(req, res){
   // The 3 variables below all come from the form
   // in views/signup.hbs
   var username=req.user.username;
-  var statement = req.body.statement;
+  var problem = req.body.problem;
   var hint = req.body.hint;
   var solution = req.body.solution;
 
 
 
-  methods.enterData(req.session.courseId,req.session.modulename, statement, hint, solution, function(err, user){
+  methods.enterData(req.session.courseId,req.session.modulename, problem, hint, solution, function(err, user){
     if (err) {
       res.render('enterdata', {error: err});
     } else {
@@ -718,7 +729,7 @@ app.post('/login', function(req, res){
               // This way subsequent requests will know the user is logged in.
               req.session.username = user.username;
 
-              res.redirect('/userscreen');
+              res.redirect('/usercourses');
     }
   }
    else {
