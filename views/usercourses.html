@@ -1,0 +1,11 @@
+<center><h3> Select acourse from the following</h3>
+
+  {{#each courses}}
+  <tr><th>
+  <form id="{{this.courseId}}" action='/userscreen' target="iframe_a" method='post'>
+<!-- Your Form -->
+	<input type='hidden' name='courseId' value='{{this.courseId}}' >
+<a href="javascript:{}" onclick="document.getElementById('{{this.courseId}}').submit(); return false;">{{this.courseName}}</a>
+</form></th></tr>
+{{/each}}
+</center>

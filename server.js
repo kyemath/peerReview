@@ -59,6 +59,9 @@ app.get('/studsettings', function(req, res){
 app.get('/uploadproblemsrepeat', function(req, res){
   res.render('uploadproblemsrepeat');
 });
+app.get('/uploadstudentsrepeat', function(req, res){
+  res.render('uploadstudentsrepeat');
+});
 app.get('/admin', function(req, res){
   res.render('admin');
 });
@@ -395,6 +398,45 @@ app.post('/updatecourse', function(req, res){
 
 });
 
+app.post('/uploadstudentcsv', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+  var username=req.user.username;
+  var filePath=req.body.csvfile;
+
+  fs.readFile(filePath, {
+              encoding: 'utf-8'
+          }, function(err, csvData) {
+              if (err) {
+                  console.log(err);
+              }
+
+              csvParser(csvData, {
+                  delimiter: ','
+              }, function(err, data) {
+                  if (err) {
+                      console.log(err);
+                  } else {
+                            for(var i=0;i<data.length;i++)
+                            {
+                          methods.enrollUsers(data[i][0],req.session.courseId,function(err,user){
+                            if (err) {
+                              res.render('uploadstudentcsv', {error: err});
+                            }
+                          });
+                        }
+                        }
+                  });
+
+
+          });
+          req.session.username = username;
+          res.redirect('/admin');
+});
+
+
+//Student enrollment
+
 app.post('/uploadcsv', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -450,7 +492,6 @@ app.post('/uploadcsv', function(req, res){
    req.session.username = username;
    res.redirect('/moduleproblems');
 });
-
 app.post('/createmodule', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -639,6 +680,22 @@ app.post('/enterdata', function(req, res){
       res.redirect('/uploadproblemsrepeat');
     }
   });
+});
+app.post('/studentdata', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/signup.hbs
+  var username=req.user.username;
+  var studentname = req.body.sname;
+
+  methods.enrollUsers(studentname,req.session.courseId,function(err,user){
+    if (err) {
+      res.render('uploadstudentcsv', {error: err});
+    }
+
+  });
+  req.session.username = username;
+
+  res.redirect('/uploadstudentsrepeat');
 });
 
 app.post('/login', function(req, res){
