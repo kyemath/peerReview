@@ -6,6 +6,16 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
 </head>
 <body>
 
@@ -15,16 +25,16 @@
 		<table >
 			<tr >
 			<form action='/savedraft' method='post'>
-				<td width="10%">Problem :</td><td align='left'>{{document.problem}}</td></tr><tr>
+				<td width="10%">Problem :</td><td align='left'>${{{document.problem}}}$</td></tr><tr>
 				<td width="10%"> hint : </td><td align='left'>{{document.hint}}</td></tr>
 
 				{{#if record}}
-				<tr><td width="10%"> draft : </td><td align='left'>{{record.draft}}</td></tr>
+				<tr><td width="10%"> draft : </td><td align='left'>${{{record.draft}}}$</td></tr>
 				{{#each comments}}
 				<tr><td colspan=2> comment : {{this.comment}} by ({{this.commentby}})</td></tr>
 				{{/each}}
 				{{#if fans_exist}}
-					<tr><td colspan=2>Final answer:{{record.finalans}}</td></tr>
+					<tr><td colspan=2>Final answer:${{{record.finalans}}}$</td></tr>
 					{{#if gradedata}}
 						{{#each gradedata}}
 							<tr><td colspan=2> feedback : {{this.feedback}} by ({{this.gradeby}}) Grade : {{this.grade}}</td></tr>

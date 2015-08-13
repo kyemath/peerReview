@@ -6,6 +6,16 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
 </head>
 <body>
 <div class='container' >
@@ -22,7 +32,7 @@
 				{{#each stmtdata}}
 			<tr >
 				<td>{{this.sno}}</td>
-				<td>{{this.problem}}</td>
+				<td>${{{this.problem}}}$</td>
 				<td>{{this.hint}}</td>
 			</tr>
 				{{/each}}

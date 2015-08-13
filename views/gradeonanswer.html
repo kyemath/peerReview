@@ -6,6 +6,16 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
 </head>
 <body>
 
@@ -17,8 +27,8 @@
 
 
 			<form action='/savegrade' method='post'>
-				<td width="20%">Problem :</td><td align='left'>{{draft.problem}}</td></tr><tr>
-				<td width="20%"> Answer : </td><td align='left'>{{draft.finalans}}</td></tr>
+				<td width="20%">Problem :</td><td align='left'>${{{draft.problem}}}$</td></tr><tr>
+				<td width="20%"> Answer : </td><td align='left'>${{{draft.finalans}}}$</td></tr>
 				<tr><td>Grade:</td><td><input type="radio" name="grade" value=1 > 1 <input type="radio" name="grade" value=2 > 2 <input type="radio" name="grade" value=3 > 3 <input type="radio" name="grade" value=4 > 4 <input type="radio" name="grade" value=5 > 5 </td></tr>
 				<tr><td width="20%">Feedback : </td><td><input type='textarea' name='feedback'></td></tr>
 				<input type='hidden' name='dno' value='{{draft.dno}}'>

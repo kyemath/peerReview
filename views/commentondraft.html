@@ -6,6 +6,16 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
 </head>
 <body>
 
@@ -17,8 +27,8 @@
 
 
 			<form action='/savecomment' method='post'>
-				<td width="20%">Problem :</td><td align='left'>{{draft.problem}}</td></tr><tr>
-				<td width="20%"> Draft : </td><td align='left'>{{draft.draft}}</td></tr>
+				<td width="20%">Problem :</td><td align='left'>${{{draft.problem}}}$</td></tr><tr>
+				<td width="20%"> Draft : </td><td align='left'>${{{draft.draft}}}$</td></tr>
 				<tr><td width="20%">comment : </td><td><input type='textarea' name='comment'></td></tr>
 				<input type='hidden' name='dno' value='{{draft.dno}}'>
 				<input type='hidden' name='commenton' value='{{draft.username}}'>

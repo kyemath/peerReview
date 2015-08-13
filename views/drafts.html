@@ -6,6 +6,16 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
 </head>
 <body>
 
@@ -16,7 +26,7 @@
 
 		    <form action='/inputdraft' method='post'>
 				{{#each stmtdata}}
-			<tr ><td><input type="radio" name="selected" value="{{this.sno}}" >{{this.problem}}</td></tr>
+			<tr ><td><input type="radio" name="selected" value="{{this.sno}}" >${{{this.problem}}}$</td></tr>
 				{{/each}}
 			<tr><td colspan=2 align='center'><button type='submit'>submit</button> <a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
 			</form>
