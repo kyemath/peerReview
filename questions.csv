@@ -1,8 +1,22 @@
-problem 1,hint 1,solution 1
-problem 2,hint 2,solution 2
-problem 3,hint 3,solution 3
-problem 4,hint 4,solution 4
-problem 5,hint 5,solution 5
-problem 6,hint 6,solution 6
-problem 7,hint 7,solution 7
-problem 8,hint 8,solution 8
+$\cos (2\theta) = \cos^2 \theta - \sin^2 \theta$,hint 1,solution 1
+$x \equiv a \pmod b$,hint 2,solution 2
+$k_{n+1} = n^2 + k_n^2 - k_{n-1}$,hint 3,solution 3
+$f(n) = n^5 + 4n^2 + 2 |_{n=17}$,hint 4,solution 4
+$\frac{n!}{k!(n-k)!} = \binom{n}{k}$,hint 5,solution 5
+$\frac{\frac{1}{x}+\frac{1}{y}}{y-z}$,hint 6,solution 6
+P\left(A=2\middle|\frac{A^2}{B}>4\right),hint 7,solution 7
+"$A_{m,n} =  \begin{pmatrix}  a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\  a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\  \vdots  & vdots  & \ddots & \vdots  \\  a_{m,1} & a_{m,2} & \cdots & a_{m,n} \end{pmatrix}$",hint 8,solution 8
+"The scores of each SAT test range from 150 to 800 subject.
+Let's assume that
+The scores are normally distributed.
+ The mean score is 500.
+  The standard deviation is 100.
+1. Create a table shows two columns: Percentiles and Corresponding Scores
+Less than or equal to 10% and the corresponding scores for these percentiles
+Bigger than 10%, but less than or equal to 20% and the corresponding scores for these percentiles
+Bigger than 20%, but less than or equal to 30% and the corresponding scores for these percentiles
+Bigger than 30%, but less than or equal to 40% and the corresponding scores for these percentiles
+Bigger than 40%, but less than or equal to 50% and the corresponding scores for these percentiles
+...
+Bigger than 90% and the corresponding scores for these percentiles
+2. Explain how you calculated the values in the table.",hint 9,solution 9

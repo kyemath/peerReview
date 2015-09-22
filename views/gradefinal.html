@@ -28,7 +28,7 @@
 		    <form action='/gradeonanswer' method='post'>
 
 				{{#each drafts}}
-			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : ${{{this.problem}}}$</td></tr>
+			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : <lable  style='white-space: pre-wrap'>{{this.problem}}</lable></td></tr>
 				{{/each}}
 			<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/userscreen"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
 

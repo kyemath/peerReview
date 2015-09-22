@@ -36,7 +36,7 @@ app.set('view engine', 'html');
 app.get('/', function(req, res){
   var coll = mongo.collection('problemschema');
   coll.find({}).toArray(function(err, stmtdata){
-    res.render('index.html', {stmtdata:stmtdata});
+      res.render('index.html', {stmtdata:stmtdata});
   })
 });
 
@@ -59,9 +59,7 @@ app.get('/studsettings', function(req, res){
 app.get('/uploadproblemsrepeat', function(req, res){
   res.render('uploadproblemsrepeat');
 });
-app.get('/uploadstudentsrepeat', function(req, res){
-  res.render('uploadstudentsrepeat');
-});
+
 app.get('/admin', function(req, res){
   res.render('admin');
 });

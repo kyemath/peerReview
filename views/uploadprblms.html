@@ -1,9 +1,13 @@
-<form action='/enterdata' method='post'>
+<html>
+<body>
+  <form action='/enterdata' method='post'>
 <table align='center'>
 
-<tr><th>Problem: </th><th><input type='textarea' name='problem'></th></tr>
-<tr><th>Hint: </th><th><input type='text' name='hint'></th></tr>
-<tr><th>Solution: </th><th><input type='textarea' name='solution'></th></tr>
+<tr><th>Problem: </th><th><textarea rows="10" cols="75" name='problem'></textarea></th></tr>
+<tr><th>Hint: </th><th><textarea rows="2" cols="75" name='hint'></textarea></th></tr>
+<tr><th>Solution: </th><th><textarea rows="5" cols="75"  name='solution'></textarea></th></tr>
 
 <tr><th colspan=2><button type='submit'>submit</button>&nbsp;<a href="/logout"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
 </form>
+</body>
+</html>
