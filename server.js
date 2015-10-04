@@ -147,6 +147,12 @@ app.get('/uploadcsv', function(req, res){
 app.get('/uploadprblms', function(req, res){
   res.render('uploadprblms');
 });
+app.get('/courseview', function(req, res){
+  var course_coll=mongo.collection("courseschema");
+  course_coll.find().toArray(function(err, courses){
+  res.render('courseview', {courses:courses});
+  });
+});
 
 app.get('/usercourses', function(req, res){
   var coll = mongo.collection('enrollmentschema');
@@ -295,11 +301,14 @@ coll.findOne({sno: stmtno}, function(err, document) {
   var dnum=null;
   var finalanswer=null;
   var fg_count=null;
+  var mygrade=null;
   if(record!=null)
   {
 		dnum=record.dno;
 		finalanswer=record.finalans;
 		fg_count=record.fgcount;
+    mygrade=record.mygrade;
+
   }
      var comment_Collection=mongo.collection('commentdata');
     comment_Collection.find({dno:""+dnum}).toArray(function(err, comments){
@@ -321,8 +330,10 @@ coll.findOne({sno: stmtno}, function(err, document) {
             avg=avg/3;
             avg_exist=true;
           }
-
-          res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist,gradedata:gradedata,avg:avg,avg_exist:avg_exist,layout:false});
+          var draft_temp=mongo.collection("tempsaveddata");
+          draft_temp.findOne({pno:""+stmtno,username:req.user.username},function(err, temprecord){
+            res.render('inputdraft', {document:document,record:record,comments:comments,final:final,fans_exist:fans_exist,gradedata:gradedata,avg:avg,avg_exist:avg_exist,temprecord:temprecord,layout:false});
+          });
         });
 
 });
@@ -369,17 +380,7 @@ app.post('/signup', function(req, res){
   });
 });
 
-//to get data from inputdraft form
-/*app.post('/inputdraft', function(req, res){
-  // The 3 variables below all come from the form
-  // in views/drafts.html
-     var username=req.user.username;
 
-      // This way subsequent requests will know the user is logged in.
-      req.session.username = username;
-	  req.session.value=req.body.selected;
-      res.redirect('/inputdraft');
-});*/
 app.post('/updatecourse', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -592,6 +593,58 @@ app.post('/gradeonanswer', function(req, res){
       res.redirect('/gradeonanswer');
 });
 
+app.post('/savetempdraft', function(req, res){
+  // The 3 variables below all come from the form
+  // in views/drafts.html
+  var username=req.user.username;
+  var solution=req.body.solution;
+  var problem=req.body.problem;
+  var finalsolution=req.body.finalsolution;
+  var pno=req.body.sno;
+
+   var coll=mongo.collection("tempsaveddata");
+   if (typeof finalsolution == "undefined")
+   {
+     coll.find({username:username,pno:pno}).toArray(function(err,savedraftdata){
+       if(savedraftdata.length!=1)
+       {
+          var savedObject = {
+          username: username,
+          pno: pno,
+          problem:problem,
+          draft: solution,
+          };
+          // insert drafts into database
+          coll.insert(savedObject, function(err,user){});
+        }
+      else {
+              coll.update({username:username,pno:pno},{$set:{draft:solution}},function(err,user){});
+      }
+    });
+  }
+  else
+  {
+    coll.find({username:username,pno:pno}).toArray(function(err,savedraftdata){
+      if(savedraftdata.length!=1)
+      {
+         var savedObject = {
+         username: username,
+         pno: pno,
+         problem:problem,
+         finalans: finalsolution,
+         };
+         // insert drafts into database
+         coll.insert(savedObject, function(err,user){});
+       }
+     else {
+             coll.update({username:username,pno:pno},{$set:{finalans:finalsolution}},function(err,user){});
+     }
+   });
+  }
+      req.session.username = username;
+      res.render('success',{layout:false});
+});
+
 app.post('/savedraft', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
@@ -600,6 +653,25 @@ app.post('/savedraft', function(req, res){
   var problem=req.body.problem;
   var pno=req.body.sno;
   var finalsolution=req.body.finalsolution;
+  var mygrade=req.body.mygrade;
+  var myfeedback=req.body.myfeedback;
+  var dno=req.body.dno;
+  if (typeof mygrade != "undefined")
+  {
+      var collection = mongo.collection('dfansdata');
+  	collection.update({dno: parseInt(dno)},{$set:{mygrade:parseInt(mygrade),myfeedback:myfeedback}}, function(err, object) {
+  																					if (err){
+  																								console.warn(err.message);  // returns error if no matching object found
+  																							}else{
+
+
+  																									}
+    });
+      req.session.username = username;
+      res.render('success',{layout:false});
+  }
+else
+{
      methods.saveDraft(username, pno, problem, solution, finalsolution, function(err, user){
     if (err) {
       res.render('inputdraft', {error: err});
@@ -612,8 +684,7 @@ app.post('/savedraft', function(req, res){
 
     }
   });
-
-
+}
 });
 
 app.post('/savecomment', function(req, res){
@@ -636,12 +707,7 @@ app.post('/savecomment', function(req, res){
 
     }
   });
-
-
 });
-
-
-
 app.post('/savegrade', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
