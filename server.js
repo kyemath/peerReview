@@ -43,7 +43,7 @@ app.get('/', function(req, res){
 app.get('/moduleproblems', function(req, res){
   var coll = mongo.collection('problemschema');
   coll.find({courseId:req.session.courseId,modulename:req.session.modulename}).toArray(function(err, stmtdata){
-    res.render('moduleproblems', {stmtdata:stmtdata});
+    res.render('moduleproblems', {stmtdata:stmtdata,modulename:req.session.modulename});
   })
 });
 //To get login page
@@ -163,7 +163,14 @@ app.get('/usercourses', function(req, res){
   });
 });
 
+app.get('/studentlist', function(req, res){
+  var coll = mongo.collection('users');
 
+    coll.find({userrole:"student"}).toArray(function(err, studentdata){
+
+  	res.render('studentlist', {studentdata:studentdata});
+  });
+});
 //To get drafts page
 app.post('/drafts', function(req,res){
 var coll = mongo.collection('problemschema');
@@ -173,7 +180,38 @@ var modulename=req.body.modulename;
 	res.render('drafts', {stmtdata:stmtdata,layout:false});
 });
 });
+//To get drafts page
+app.post('/coursedetails', function(req,res){
+var mod_coll = mongo.collection('moduleschema');
+var enroll_coll = mongo.collection('enrollmentschema');
 
+var courseid=req.body.courseid;
+req.session.courseId=courseid;
+  mod_coll.find({courseId:courseid}).toArray(function(err, moduledata){
+    enroll_coll.find({courseId:courseid}).toArray(function(err, enrollmentdata){
+    res.render('coursedetails', {moduledata:moduledata,enrollmentdata:enrollmentdata});
+    });
+});
+});
+app.post('/moduledetails', function(req,res){
+var modulename=req.body.modulename;
+req.session.modulename=modulename;
+
+    res.redirect('/moduleproblems');
+});
+
+app.post('/delete', function(req,res){
+var sno=req.body.sno;
+var prblm_coll=mongo.collection("problemschema");
+prblm_coll.remove({sno:parseInt(sno)},function(err,result){
+  if(err)
+  console.log(err);
+  else
+  console.log("deleted");
+});
+
+    res.redirect('/moduleproblems');
+});
 
 //A page to review the drafts
 app.get('/reviewdrafts', function(req,res){

@@ -1,10 +1,19 @@
 <center>
-<a href="/courseview">Course View</a> || <a href="/createnewcourse">Create New Course</a> || <a href="/modifycourse">Modify Existing Course</a> || <a href="/courseemail">Course Mail</a>
+
   <h3> Available Courses</h3>
   <table border=1 width="65%">
-    <tr><th>Course Id</th><th>Course Num</th><th>Course Name</th></tr>
+    <tr><th>Course Id</th><th>Course Num</th><th>Course Name</th><th>UPDATE</th><th>DELETE</th></tr>
     {{#each courses}}
-    <tr><td>{{this.courseId}}</td><td>{{this.courseNum}}</td><th><a href="">{{this.courseName}}</a></th></tr>
+    <form id="{{this.courseId}}" action='/coursedetails' method='post'>
+  <!-- Your Form -->
+  	<input type='hidden' name='courseid' value='{{this.courseId}}' >
+    <tr>
+      <td>{{this.courseId}}</td><td>{{this.courseNum}}</td><th><a href="javascript:{}" onclick="document.getElementById('{{this.courseId}}').submit(); return false;">{{this.courseName}}</a></th><td><a href="#">Update</a></td><td><a href="#">Delete</a></tr>
+
+  </form>
     {{/each}}
   </table>
+
+  <br><br>
+  <a href="/admin">Home</a>
 </center>
