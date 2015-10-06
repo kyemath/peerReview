@@ -1,6 +1,11 @@
 <center><h2> Create New Module</h2></center>
 <form action='/createmodule' method='post'>
 <table align='center'>
-<tr><th>Module Name: </th><th><input type='text' name='modulename' required></th></tr>
+  {{#if result}}
+      <input type="hidden" name="oldmodulename" value="{{result.modulename}}">
+      <tr><th>Module Name: </th><th><input type='text' name='modulename' value='{{result.modulename}}'  required></th></tr>
+  {{else}}
+      <tr><th>Module Name: </th><th><input type='text' name='modulename' required></th></tr>
+{{/if}}
 <tr><th colspan=2><button type='submit'>upload</button><a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
 </form>

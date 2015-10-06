@@ -2,8 +2,16 @@
 <center><h2> Create New Course</h2></center>
 <form action='/createcourse' method='post'>
 <table align='center'>
-<tr><th align='right'>Course ID: </th><td><input type='text' name='courseid' required></td></tr>
-<tr><th align='right'>Course Name: </th><td><input type='text' name='coursename' required></td></tr>
-<tr><th align='right'>Course Number: </th><td><input type='text' name='coursenum' required></td></tr>
-<tr><th colspan=2><button type='submit'>Upload</button> &nbsp;<a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
+  {{#if result}}
+  <input type="hidden" name="update" value="yes">
+  <input type="hidden" name="courseid" value="{{result.courseId}}">
+    <tr><th align='right'>Course ID: </th><td><input type='text' name='coursd' value='{{result.courseId}}' disabled></td></tr>
+    <tr><th align='right'>Course Name: </th><td><input type='text' name='coursename' value='{{result.courseName}}' required></td></tr>
+    <tr><th align='right'>Course Number: </th><td><input type='text' name='coursenum' value='{{result.courseNum}}' required></td></tr>
+  {{else}}
+    <tr><th align='right'>Course ID: </th><td><input type='text' name='courseid' required></td></tr>
+    <tr><th align='right'>Course Name: </th><td><input type='text' name='coursename' required></td></tr>
+    <tr><th align='right'>Course Number: </th><td><input type='text' name='coursenum' required></td></tr>
+  {{/if}}
+<tr><th colspan=2><button type='submit'>Create</button> &nbsp;<a href="/admin"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
 </form>

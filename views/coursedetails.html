@@ -8,17 +8,26 @@
   <!-- Your Form -->
   	<input type='hidden' name='modulename' value='{{this.modulename}}' >
     <tr>
-      <th><a href="javascript:{}" onclick="document.getElementById('{{this.modulename}}').submit(); return false;">{{this.modulename}}</a></th><td><a href="#">Update</a></td><td><a href="#">Delete</a></td></tr>
+      <th><a href="javascript:{}" onclick="document.getElementById('{{this.modulename}}').submit(); return false;">{{this.modulename}}</a></th>
+      <td><input type="submit" formaction="/update" value="Update"></td><td><input type="submit" formaction="/delete" value="Delete"></td></tr>
 
   </form>
     {{/each}}
     </table>
+    <br>
     <hr>
     <h3>Enrollment Details</h3>
     <table border="1" width="60%">
-      <tr><th>Student UserName</th><th>UPDATE</th><th>DELETE</th></tr>
+      <tr><th>Student UserName</th><th>DELETE</th></tr>
       {{#each enrollmentdata}}
-      <tr><td><a href="#">{{this.username}}</a></td><td><a href="#">Update</a></td><td><a href="#">Delete</a></td></tr>
+      <form action='/' method='post'>
+      <!-- Your Form -->
+      <input type='hidden' name='enrolleduser' value='{{this.username}}' >
+         <tr >
+        <td><a href="#">{{this.username}}</a></td>
+             <td><input type="submit" formaction="/delete" value="Delete"></td></tr>
+      </form>
+
       {{/each}}
       </table>
       <br><br>

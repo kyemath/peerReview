@@ -3,7 +3,12 @@
 <table border="1" width="90%">
   <tr><th>Username</th><th>First Name</th><th>Last Name</th><th>Email Address</th><th>UPDATE</th><th>DELETE</th></tr>
   {{#each studentdata}}
-  <tr><td>{{this.username}}</td><td>{{this.firstname}}</td><td>{{this.lastname}}</td><td>{{this.email}}</td><td><a href="#">Update</a></td><td><a href="#">Delete</a></td></tr>
+  <form action='/' method='post'>
+  <!-- Your Form -->
+  <input type='hidden' name='studentname' value='{{this.username}}' >
+  <tr><td>{{this.username}}</td><td>{{this.firstname}}</td><td>{{this.lastname}}</td><td>{{this.email}}</td>
+     <td><input type="submit" formaction="/update" value="Update"></td><td><input type="submit" formaction="/delete" value="Delete"></td></tr>
+   </form>
   {{/each}}
   </table>
   <br><br>

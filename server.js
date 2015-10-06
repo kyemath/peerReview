@@ -59,6 +59,9 @@ app.get('/studsettings', function(req, res){
 app.get('/uploadproblemsrepeat', function(req, res){
   res.render('uploadproblemsrepeat');
 });
+app.get('/uploadstudentsrepeat', function(req, res){
+  res.render('uploadstudentsrepeat');
+});
 
 app.get('/admin', function(req, res){
   res.render('admin');
@@ -202,16 +205,175 @@ req.session.modulename=modulename;
 
 app.post('/delete', function(req,res){
 var sno=req.body.sno;
-var prblm_coll=mongo.collection("problemschema");
-prblm_coll.remove({sno:parseInt(sno)},function(err,result){
-  if(err)
-  console.log(err);
-  else
-  console.log("deleted");
+var modulename=req.body.modulename;
+var enrolleduser=req.body.enrolleduser;
+var courseid=req.body.courseid;
+var studentname=req.body.studentname;
+if(typeof sno!="undefined")
+{
+  var prblm_coll=mongo.collection("problemschema");
+
+  prblm_coll.remove({sno:parseInt(sno)},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var draft_coll=mongo.collection("dfansdata");
+    draft_coll.remove({pno:sno},function(err,result){
+      if(err)
+      console.log(err);
+      });
+    res.redirect('/moduleproblems');
+}
+else if(typeof modulename!="undefined")
+{
+  var mod_coll=mongo.collection("moduleschema");
+  var prblm_coll=mongo.collection("problemschema");
+  prblm_coll.remove({modulename:modulename},function(err,result){
+    if(err)
+    console.log(err);
+    });
+  mod_coll.remove({modulename:modulename},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var mod_coll = mongo.collection('moduleschema');
+    var enroll_coll = mongo.collection('enrollmentschema');
+    var courseid=req.session.courseId;
+      mod_coll.find({courseId:courseid}).toArray(function(err, moduledata){
+        enroll_coll.find({courseId:courseid}).toArray(function(err, enrollmentdata){
+        res.render('coursedetails', {moduledata:moduledata,enrollmentdata:enrollmentdata});
+      });
+    });
+}
+else if(typeof enrolleduser!="undefined")
+{
+  var enroll_coll=mongo.collection("enrollmentschema");
+  enroll_coll.remove({username:enrolleduser,courseId:req.session.courseId},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var mod_coll = mongo.collection('moduleschema');
+    var enroll_coll = mongo.collection('enrollmentschema');
+    var courseid=req.session.courseId;
+      mod_coll.find({courseId:courseid}).toArray(function(err, moduledata){
+        enroll_coll.find({courseId:courseid}).toArray(function(err, enrollmentdata){
+        res.render('coursedetails', {moduledata:moduledata,enrollmentdata:enrollmentdata});
+      });
+    });
+}
+else if(typeof courseid!="undefined")
+{
+  var mod_coll=mongo.collection("moduleschema");
+  var prblm_coll=mongo.collection("problemschema");
+  prblm_coll.remove({courseId:courseid},function(err,result){
+    if(err)
+    console.log(err);
+    });
+  mod_coll.remove({courseId:courseid},function(err,result){
+    if(err)
+    console.log(err);
+    });
+  var course_coll=mongo.collection("courseschema");
+  course_coll.remove({courseId:courseid},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var enroll_coll = mongo.collection('enrollmentschema');
+    enroll_coll.remove({courseId:courseid},function(err,result){
+      if(err)
+      console.log(err);
+      });
+    res.redirect('/courseview');
+}
+else if(typeof studentname!="undefined")
+{
+  var prblm_coll=mongo.collection("users");
+  prblm_coll.remove({username:studentname},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var enroll_coll = mongo.collection('enrollmentschema');
+    enroll_coll.remove({username:studentname},function(err,result){
+      if(err)
+      console.log(err);
+      });
+    res.redirect('/studentlist');
+}
+else
+{
+    res.redirect('/admin');
+}
+
 });
 
-    res.redirect('/moduleproblems');
+//Post method for updating
+app.post('/update', function(req,res){
+var sno=req.body.sno;
+var modulename=req.body.modulename;
+var enrolleduser=req.body.enrolleduser;
+var courseid=req.body.courseid;
+var studentname=req.body.studentname;
+if(typeof sno!="undefined")
+{
+  var prblm_coll=mongo.collection("problemschema");
+
+  prblm_coll.findOne({sno:parseInt(sno)},function(err,result){
+    if(err)
+    console.log(err);
+    else {
+        res.render('uploadprblms',{result:result});
+      }
+  });
+
+
+}
+else if(typeof modulename!="undefined")
+{
+  var mod_coll=mongo.collection("moduleschema");
+
+  mod_coll.findOne({modulename:modulename},function(err,result){
+    if(err)
+    console.log(err);
+    else {
+      res.render('createmodule',{result:result});
+    }
+    });
+
+}
+else if(typeof courseid!="undefined")
+{
+
+  var course_coll=mongo.collection("courseschema");
+  course_coll.findOne({courseId:courseid},function(err,result){
+    if(err)
+    console.log(err);
+    else
+    {
+      res.render('createnewcourse',{result:result});
+    }
+    });
+}
+else if(typeof studentname!="undefined")
+{
+  var prblm_coll=mongo.collection("users");
+  prblm_coll.remove({username:studentname},function(err,result){
+    if(err)
+    console.log(err);
+    });
+    var enroll_coll = mongo.collection('enrollmentschema');
+    enroll_coll.remove({username:studentname},function(err,result){
+      if(err)
+      console.log(err);
+      });
+    res.redirect('/studentlist');
+}
+else
+{
+    res.redirect('/admin');
+}
+
 });
+
 
 //A page to review the drafts
 app.get('/reviewdrafts', function(req,res){
@@ -438,10 +600,6 @@ app.post('/updatecourse', function(req, res){
          res.render('updatecourse',{course:course,modules:modList});
 
        });
-
-
-
-
      });
 
 });
@@ -508,13 +666,12 @@ app.post('/uploadcsv', function(req, res){
 
 
 
-                        newColl.count(function(err, count) {
-                            assert.equal(null, err);
-  		                          ++count;
+                    newColl.findOne({$query:{},$orderby:{sno:-1}},function(err, lastrecord) {
+                        var recsno=parseInt(lastrecord.sno)+1;
                                 for(var i=0;i<data.length;i++)
                                 {
                                   var stmtObject = {
-  	                                               sno:count,
+  	                                               sno:recsno,
                                                   courseId:req.session.courseId,
   	                                              modulename:req.session.modulename,
                                                   problem: data[i][0],
@@ -527,7 +684,7 @@ app.post('/uploadcsv', function(req, res){
                                                     newColl.insert(stmtObject, function(err,user){
 
                                                     });
-                                                    count++;
+                                                    recsno++;
   	                              }
 
                                 });
@@ -546,11 +703,37 @@ app.post('/createmodule', function(req, res){
      var username=req.user.username;
      var modulename=req.body.modulename;
      var coll=mongo.collection("moduleschema");
+     var oldmodulename=req.body.oldmodulename;
+     if(typeof oldmodulename!="undefined")
+     {
+       coll.update({modulename:oldmodulename},{$set:{modulename:modulename}},function(err,user){
+         if(err)
+         console.log(err);
+       });
+       var prblm_coll=mongo.collection("problemschema");
+       prblm_coll.update({modulename:oldmodulename},{$set:{modulename:modulename}},{multi:true},function(err,user){
+         if(err)
+         console.log(err);
+       });
+
+       req.session.username = username;
+       req.session.modulename = modulename;
+       var courseid=req.session.courseId;
+       var enroll_coll=mongo.collection("enrollmentschema");
+         coll.find({courseId:courseid}).toArray(function(err, moduledata){
+           enroll_coll.find({courseId:courseid}).toArray(function(err, enrollmentdata){
+           res.render('coursedetails', {moduledata:moduledata,enrollmentdata:enrollmentdata});
+         });
+       });
+     }
+     else {
+
      coll.insert({modulename:modulename,courseId:req.session.courseId,createdby:username}, function(err,user){ });
       // This way subsequent requests will know the user is logged in.
       req.session.username = username;
       req.session.modulename = modulename;
       res.render('modulecreated',{modulename:modulename});
+    }
 });
 
 app.post('/createcourse', function(req, res){
@@ -560,20 +743,31 @@ app.post('/createcourse', function(req, res){
      var courseName=req.body.coursename;
      var courseNum=req.body.coursenum;
      var courseId=req.body.courseid;
-methods.createCourse(courseName,courseNum,courseId,username, function(err, user){
-if (err) {
- res.render('createnewcourse', {error: err});
-} else {
+     var update=req.body.update;
+     if(typeof update!="undefined")
+     {
+       var course_coll=mongo.collection("courseschema");
+       course_coll.update({courseId:courseId},{$set:{courseName:courseName,courseNum:courseNum}},function(err,result){
+         if(err)
+         console.log(err);
+         });
+         res.redirect('/courseview');
+     }
+     else {
+       methods.createCourse(courseName,courseNum,courseId,username, function(err, user){
+       if (err) {
+        res.render('createnewcourse', {error: err});
+       } else {
 
- // This way subsequent requests will know the user is logged in.
- req.session.username = username;
- req.session.courseId=courseId;
- res.render('coursecreated',{courseName:courseName,courseNum:courseNum,courseId:courseId});
+        // This way subsequent requests will know the user is logged in.
+        req.session.username = username;
+        req.session.courseId=courseId;
+        res.render('coursecreated',{courseName:courseName,courseNum:courseNum,courseId:courseId});
 
-}
-});
+       }
+       });
 
-
+     }
 });
 
 
@@ -779,8 +973,23 @@ app.post('/enterdata', function(req, res){
   var problem = req.body.problem;
   var hint = req.body.hint;
   var solution = req.body.solution;
-
-
+  var sno=req.body.sno;
+if(typeof sno!="undefined")
+{
+  var coll=mongo.collection("problemschema")
+  coll.update({sno:parseInt(sno)},{$set:{problem:problem,hint:hint,solution:solution}},function(err,user){
+    if(err)
+    console.log(err);
+  });
+  var draft_coll=mongo.collection("dfansdata")
+  draft_coll.update({sno:parseInt(sno)},{$set:{problem:problem}},function(err,user){
+    if(err)
+    console.log(err);
+  });
+  res.redirect('/moduleproblems');
+}
+else
+{
 
   methods.enterData(req.session.courseId,req.session.modulename, problem, hint, solution, function(err, user){
     if (err) {
@@ -793,6 +1002,7 @@ app.post('/enterdata', function(req, res){
       res.redirect('/uploadproblemsrepeat');
     }
   });
+}
 });
 app.post('/studentdata', function(req, res){
   // The 3 variables below all come from the form

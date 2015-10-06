@@ -8,7 +8,8 @@
   <!-- Your Form -->
   	<input type='hidden' name='courseid' value='{{this.courseId}}' >
     <tr>
-      <td>{{this.courseId}}</td><td>{{this.courseNum}}</td><th><a href="javascript:{}" onclick="document.getElementById('{{this.courseId}}').submit(); return false;">{{this.courseName}}</a></th><td><a href="#">Update</a></td><td><a href="#">Delete</a></tr>
+      <td>{{this.courseId}}</td><td>{{this.courseNum}}</td><th><a href="javascript:{}" onclick="document.getElementById('{{this.courseId}}').submit(); return false;">{{this.courseName}}</a></th>
+      <td><input type="submit" formaction="/update" value="Update"></td><td><input type="submit" formaction="/delete" value="Delete"></td></tr>
 
   </form>
     {{/each}}
