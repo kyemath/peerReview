@@ -12,8 +12,11 @@ var csvParser = require('csv-parse');
 
 
 var port = 3333; // port number which we are using for node server
+//set up of view engine
+app.engine('html', expressHbs({extname:'html', defaultLayout:'main.html'}));
+app.set('view engine', 'html');
 
-
+app.use(express.static(__dirname));
 // Use this so we can get access to `req.body` in our posted forms.
 app.use( require('body-parser')() );
 
@@ -28,9 +31,6 @@ app.use( expressSession({secret: 'somesecretrandomstring',}));
 app.use(methods.checkIfLoggedIn);
 
 
-//set up of view engine
-app.engine('html', expressHbs({extname:'html', defaultLayout:'main.html'}));
-app.set('view engine', 'html');
 
 //To get home page
 app.get('/', function(req, res){
@@ -159,9 +159,24 @@ app.get('/courseview', function(req, res){
 
 app.get('/usercourses', function(req, res){
   var coll = mongo.collection('enrollmentschema');
-
+  var coll_course=mongo.collection('courseschema');
+  var course_details=[][2];
     coll.find({username:req.session.username}).toArray(function(err, courses){
 
+      /*for(var i=0;i<courses.length;i++)
+      {
+        console.log(courses[i]['courseId']);
+        coll_course.findOne({courseId:courses[i]['courseId']},function(err,coursename)
+        {
+          course_details[i]['coursename']=coursename;
+          course_details[i]['courseId']=courses[i]['courseId'];
+        });
+
+      }
+      for(var k=0;k<course_details.length;k++)
+      {
+        console.log(course_details[i]['coursename']+"::"+course_details[i]['courseId']);
+      }*/
   	res.render('usercourses', {courses:courses});
   });
 });
@@ -480,6 +495,41 @@ var ddno=parseInt(req.session.dvalue);
 
 });
 });
+
+//Your grade
+app.get('/mycoursegrade', function(req,res){
+  var draft_Collection=mongo.collection('dfansdata');
+
+    var final_grade=0.0;
+
+  draft_Collection.find({username:req.user.username,fgcount:3}).toArray(function(err, records){
+
+      for(var i=0;i<records.length;i++)
+      {
+          methods.setAvg(records[i]['dno'],req.user.username,function(err, fgrade){
+            if (err) {
+              res.render('mycoursegrade', {error: err});
+            } else {
+
+                    }
+            });
+
+        }
+        draft_Collection.find({username:req.user.username,fgcount:3}).toArray(function(err, results){
+
+            var final_grade=0.0;
+            for(var n=0;n<results.length;n++)
+            {
+              if(typeof results[n]["fgrade"]!="undefined")
+                final_grade=final_grade+results[n]["fgrade"];
+            }
+            console.log(final_grade);
+            final_grade=final_grade/records.length;
+            res.render('mycoursegrade', {final_grade:final_grade,layout:false});
+        });
+      });
+    });
+
 //grade on an answer
 app.get('/gradeonanswer', function(req,res){
 var coll = mongo.collection('dfansdata');
@@ -548,7 +598,7 @@ app.get('/userscreen', function(req,res){
   req.session.courseId=req.param("courseId");
 var coll = mongo.collection('moduleschema');
   coll.find({courseId:req.session.courseId}).toArray(function(err, modules){
-    res.render('userscreen', {modules:modules});
+    res.render('userscreen', {modules:modules,courseId:req.session.courseId});
 });
 });
 
@@ -943,13 +993,13 @@ app.post('/savecomment', function(req, res){
 app.post('/savegrade', function(req, res){
   // The 3 variables below all come from the form
   // in views/drafts.html
-
+  var courseId=req.session.courseId;
   var gradeby=req.user.username;
   var feedback=req.body.feedback;
   var gradeon=req.body.gradeon;
   var dno=req.body.dno;
   var grade=req.body.grade;
-     methods.saveGrade(feedback, dno, gradeon, gradeby,grade, function(err, user){
+     methods.saveGrade(feedback, dno, gradeon, gradeby,grade,courseId, function(err, user){
     if (err) {
       res.render('gradeonanswer', {error: err});
     } else {

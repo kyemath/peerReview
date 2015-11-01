@@ -1,6 +1,14 @@
+<hltml>
+<head>
+  <link href="/views/css/sidebar/styles.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+  <br><br><Br><br>
 <center><h3> Select a course from the following</h3>
-
+<hr><hr><br><br>
   {{#each courses}}
   <a href="/userscreen?courseId={{this.courseId}}">{{this.courseId}}</a><br>
 {{/each}}
 </center>
+</body>
+</html>

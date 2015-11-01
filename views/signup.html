@@ -1,18 +1,26 @@
+<html>
+<head>
+    <link href="/views/css/sidebar/styles.css" rel="stylesheet" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/views/css/style.css" type="text/css" media="screen" />
+</head>
+<body>
 {{#if error}}
 <p>There was an error signing up: {{error}}.</p>
 {{/if}}
 <form action='/signup' method='post'>
-<table align='center'>
-<tr><th>First Name: </th><th><input type='text' name='firstname' required></th></tr>
-<tr><th>Last Name: </th><th><input type='text' name='lastname' required></th></tr>
-<tr><th>Username: </th><th><input type='text' name='username' required></th></tr>
-<tr><th>Password: </th><th><input type='password' name='password' required></th></tr>
-<tr><th>Password (confirmation): </th><th><input type='password' name='password_confirmation' required></th></tr>
-<tr><th>email:</th><th><input type="email" name="email" required/></th></tr>
-<tr><th>Security Question: </th><th><input type='text' name='squest' required></th></tr>
-<tr><th>Answer: </th><th><input type='text' name='answer' required></th></tr>
-<tr><th>User Role: </th><th><select name="userrole"><option value="student">Student</option><option value="admin">Admin</option> </select></th></tr>
+<table align='center' width="60%">
+<tr><th align='right'>First Name: </th><th><input type='text' name='firstname' required></th></tr>
+<tr><th align='right'>Last Name: </th><th><input type='text' name='lastname' required></th></tr>
+<tr><th align='right'>Username: </th><th><input type='text' name='username' required></th></tr>
+<tr><th align='right'>Password: </th><th><input type='password' name='password' required></th></tr>
+<tr><th align='right'>Password (confirmation): </th><th><input type='password' name='password_confirmation' required></th></tr>
+<tr><th align='right'>email:</th><th><input type="email" name="email" required/></th></tr>
+<tr><th align='right'>Security Question: </th><th><input type='text' name='squest' required></th></tr>
+<tr><th align='right'>Answer: </th><th><input type='text' name='answer' required></th></tr>
+<tr><th align='right'>User Role: </th><th><select name="userrole"><option value="student">Student</option><option value="admin">Admin</option> </select></th></tr>
 
-<tr><th colspan=2><button type='submit'>Sign up</button><a href="/logout"><input type='button' value='Cancel' name='Cancel'></a></th></tr></table>
+<tr><th colspan=2 align='center'><button type='submit' class="btn">Sign up</button>&nbsp;<a href="/logout"><input type='button' class="btn" value='Cancel' name='Cancel'></a></th></tr></table>
 
 </form>
+</body>
+</html>

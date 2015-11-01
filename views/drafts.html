@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/views/css/style.css" type="text/css" media="screen" />
+
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {
@@ -21,14 +22,14 @@
 
 <div class='container' >
 	{{#if stmtdata}}
-<h2 align='center'>Select a problem from the list</h2><br>
+<h2 align='center'>Select a problem from the list</h2><br><hr>
 		<table >
 
 		    <form action='/inputdraft' method='post'>
 				{{#each stmtdata}}
 			<tr ><td><input type="radio" name="selected" value="{{this.sno}}" ><lable  style='white-space: pre-wrap'>{{this.problem}}</lable></td></tr>
 				{{/each}}
-			<tr><td colspan=2 align='center'><button type='submit'>submit</button> <a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+			<tr><td colspan=2 align='center'><br><br><button type='submit' class="btn">submit</button> <a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
 			</form>
 
 		</table>

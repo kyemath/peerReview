@@ -6,6 +6,7 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/views/css/style.css" type="text/css" media="screen" />
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {
@@ -21,7 +22,7 @@
 
 <div class='container' >
 	{{#if drafts}}
-	<center><h2> Select a problem to grade</h2></center>
+	<center><h2> Select a problem to grade</h2></center><br><hr>
 <br>
 		<table >
 
@@ -30,7 +31,7 @@
 				{{#each drafts}}
 			<tr ><td><input type="radio" name="dselected" value="{{this.dno}}" >{{this.username}} : <lable  style='white-space: pre-wrap'>{{this.problem}}</lable></td></tr>
 				{{/each}}
-			<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/userscreen"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+			<tr><td colspan=2 align='center'><br><button type='submit' class="btn">submit</button>&nbsp;<a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
 
 			</form>
 

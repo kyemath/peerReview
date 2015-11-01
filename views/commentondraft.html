@@ -6,6 +6,7 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/views/css/style.css" type="text/css" media="screen" />
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {
@@ -20,7 +21,7 @@
 <body>
 
 <div class='container' >
-<h2 align='center'>Review and Comment on this Draft</h2><br>
+<h2 align='center'>Review and Comment on this Draft</h2><br><hr><br>
 
 		<table >
 			<tr >
@@ -31,7 +32,7 @@
 				<tr><td width="20%">comment : </td><td><input type='textarea' name='comment'></td></tr>
 				<input type='hidden' name='dno' value='{{draft.dno}}'>
 				<input type='hidden' name='commenton' value='{{draft.username}}'>
-			<tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+			<tr><td colspan=2 align='center'><br><button type='submit' class="btn">submit</button>&nbsp;<a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
 			</form>
 
 

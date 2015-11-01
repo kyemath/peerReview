@@ -6,6 +6,7 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/views/css/style.css" type="text/css" media="screen" />
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {
@@ -20,7 +21,7 @@
 <body>
 
 <div class='container' >
-<h2 align='center'>Input your Draft</h2><br>
+<h2 align='center'>Input your Draft</h2><br><hr><br>
 
 		<table >
 			<tr >
@@ -48,7 +49,7 @@
               {{else}}
               <tr><td>Grade yourself for this problem:</td><td><input type="radio" name="mygrade" value=1 > 1 <input type="radio" name="mygrade" value=2 > 2 <input type="radio" name="mygrade" value=3 > 3 <input type="radio" name="mygrade" value=4 > 4 <input type="radio" name="mygrade" value=5 > 5 </td></tr>
       				<tr><td width="20%">your Feedback on the grader : </td><td><input type='textarea' name='myfeedback'></td></tr>
-              <tr><td colspan=2 align='center'><button type='submit'>submit</button><a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+              <tr><td colspan=2 align='center'><br><button type='submit' class="btn">submit</button>&nbsp;<a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
               {{/if}}
 						{{/if}}
 				{{else}}
@@ -58,7 +59,7 @@
           {{else}}
                 <tr><td width="10%">Final Solution : </td><td><textarea  name='finalsolution'></textarea></td></tr>
           {{/if}}
-            <tr><td colspan=2 ><input type='submit' value="Save" formaction="/savetempdraft" />&nbsp;<input type='submit' value="Submit" name="submit"/>&nbsp;<a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+            <tr><td colspan=2 ><br><input type='submit' value="Save" class="btn" formaction="/savetempdraft" />&nbsp;<input type='submit' class="btn" value="Submit" name="submit"/>&nbsp;<a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
           {{else}}
 					<tr><td colspan=2><p>Please wait as the review is still inprogress.</p></td></tr>
 					{{/if}}
@@ -69,7 +70,7 @@
           {{else}}
                 <tr><td width="10%">Draft : </td><td><textarea  name='solution'></textarea></td></tr>
           {{/if}}
-				        <tr><td colspan=2 ><input type='submit' value="Save" formaction="/savetempdraft" />&nbsp;<input type='submit' value="Submit" name="submit"/>&nbsp;<a href="/selectmodule"><input type='button' value='Cancel' name='Cancel'></a></td></tr>
+				        <tr><td colspan=2 ><br><input type='submit' value="Save" class="btn" formaction="/savetempdraft" />&nbsp;<input type='submit' class="btn"  value="Submit" name="submit"/>&nbsp;<a href="/selectmodule"><input type='button' class="btn" value='Cancel' name='Cancel'></a></td></tr>
 				{{/if}}
 
 
