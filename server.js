@@ -523,7 +523,7 @@ app.get('/mycoursegrade', function(req,res){
               if(typeof results[n]["fgrade"]!="undefined")
                 final_grade=final_grade+results[n]["fgrade"];
             }
-            console.log(final_grade);
+
             final_grade=final_grade/records.length;
             res.render('mycoursegrade', {final_grade:final_grade,layout:false});
         });
